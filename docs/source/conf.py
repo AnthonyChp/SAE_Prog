@@ -8,7 +8,7 @@
 
 project = 'SalleConcert'
 copyright = '2023, .'
-author = '.'
+author = 'CHAPUS Anthony, JAMET Corentin, GILBERT Einar, BAUWENS Matthieu, LE PABIC Gurvan'
 
 # -- General configuration ---------------------------------------------------
 # https://www.sphinx-doc.org/en/master/usage/configuration.html#general-configuration
