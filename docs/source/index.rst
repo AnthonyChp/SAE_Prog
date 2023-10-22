@@ -3,7 +3,7 @@
    You can adapt this file completely to your liking, but it should at least
    contain the root `toctree` directive.
 
-Welcome to SalleConcert's documentation!
+Documentation du projet Salle de concert
 ========================================
 
 .. toctree::
@@ -12,7 +12,7 @@ Welcome to SalleConcert's documentation!
 
 
 
-Indices and tables
+Navigation : 
 ==================
 
 * :ref:`genindex`

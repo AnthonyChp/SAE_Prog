@@ -1,7 +1,7 @@
 """
-.. module:: module1
+.. module:: exemple_ecriture_module
    :platform: Unix, windows
-   :synopsis: module1 du projet
+   :synopsis: exemple d'écriture d'un module pour autodoc par sphinx
 
 .. moduleauthor:: Nom Prenom <prenom.nom@etu.univ-poitiers.fr>
 
