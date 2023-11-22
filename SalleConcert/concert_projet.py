@@ -2,25 +2,58 @@ import sys
 from PyQt5.QtWidgets import QApplication, QWidget, QPushButton, QMessageBox, QGridLayout, QDialog, QLabel, QVBoxLayout, QLineEdit
 from PyQt5.QtCore import Qt
 import mysql.connector
+import bcrypt
+import subprocess
 
 class LoginDialog(QDialog):
     def __init__(self, parent=None):
         super(LoginDialog, self).__init__(parent)
 
         self.setWindowTitle('Connexion')
-        self.username_label = QLabel('Nom d\'utilisateur:')
+        self.username_label = QLabel('Adresse e-mail:')
         self.username_edit = QLineEdit()
+        self.password_label = QLabel('Mot de passe:')
+        self.password_edit = QLineEdit()
+        self.password_edit.setEchoMode(QLineEdit.Password)
         self.login_button = QPushButton('Se connecter')
 
         layout = QVBoxLayout()
         layout.addWidget(self.username_label)
         layout.addWidget(self.username_edit)
+        layout.addWidget(self.password_label)
+        layout.addWidget(self.password_edit)
         layout.addWidget(self.login_button)
         self.setLayout(layout)
 
-        self.login_button.clicked.connect(self.accept)
+        self.login_button.clicked.connect(self.try_login)
 
-    def get_username(self):
+    def try_login(self):
+        email = self.username_edit.text()
+        password = self.password_edit.text()
+
+        # Connexion à la base de données
+        connection = mysql.connector.connect(
+            host='localhost',
+            user='admin',
+            password='admin',
+            database='salle_concert'
+        )
+        cursor = connection.cursor()
+
+        # Récupération du mot de passe haché depuis la base de données
+        cursor.execute("SELECT mot_de_passe FROM spectateurs WHERE email = %s", (email,))
+        result = cursor.fetchone()
+
+        if result and bcrypt.checkpw(password.encode('utf-8'), result[0].encode('utf-8')):
+            # Mot de passe correct
+            self.accept()
+        else:
+            # Mot de passe incorrect
+            QMessageBox.warning(self, 'Erreur d\'authentification', 'Adresse e-mail ou mot de passe incorrect')
+
+        connection.close()
+
+    def get_email(self):
         return self.username_edit.text()
 
 
@@ -51,11 +84,14 @@ class ReservationApp(QWidget):
 
         self.login_button = QPushButton('Se connecter')
         self.login_button.clicked.connect(self.show_login_dialog)
+        self.create_account_button = QPushButton('Créer un compte')
+        self.create_account_button.clicked.connect(self.launch_create_account_script)
         self.username_label = QLabel()
 
         layout = QGridLayout()
         layout.addWidget(self.login_button, 0, 0, 1, 3, alignment=Qt.AlignTop | Qt.AlignLeft)
-        layout.addWidget(self.username_label, 1, 0, 1, 3)
+        layout.addWidget(self.create_account_button, 0, 3, 1, 3, alignment=Qt.AlignTop | Qt.AlignRight)
+        layout.addWidget(self.username_label, 1, 0, 1, 6)
         self.seat_buttons = []
 
         # Connexion à la base de donnée
@@ -85,11 +121,22 @@ class ReservationApp(QWidget):
         self.show()
 
     def show_login_dialog(self):
-        login_dialog = LoginDialog(self)
-        if login_dialog.exec_() == QDialog.Accepted:
-            username = login_dialog.get_username()
-            self.username_label.setText(f"Connecté en tant que {username}")
+        if self.login_button.text() == 'Se connecter':
+            login_dialog = LoginDialog(self)
+            if login_dialog.exec_() == QDialog.Accepted:
+                email = login_dialog.get_email()
+                self.username_label.setText(f"Connecté en tant que {email}")
+                self.login_button.setText('Déconnexion')
+        else:
+            self.logout()
 
+    def launch_create_account_script(self):
+        # Lancer le script de création de compte
+        subprocess.run(['python3', 'creation_compte.py'])
+
+    def logout(self):
+        self.username_label.clear()
+        self.login_button.setText('Se connecter')
 
 if __name__ == '__main__':
     app = QApplication(sys.argv)
