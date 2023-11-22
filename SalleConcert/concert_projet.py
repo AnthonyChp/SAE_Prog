@@ -58,7 +58,7 @@ class ReservationApp(QWidget):
         layout.addWidget(self.username_label, 1, 0, 1, 3)
         self.seat_buttons = []
 
-        # Connecting to MySQL database
+        # Connexion à la base de donnée
         connection = mysql.connector.connect(
             host='localhost',
             user='admin',
@@ -67,7 +67,7 @@ class ReservationApp(QWidget):
         )
         cursor = connection.cursor()
 
-        # Fetching concert names from the database
+        # Permet de récupérer les concert de la base de donnée
         cursor.execute("SELECT titre FROM concerts")
         concerts = cursor.fetchall()
 

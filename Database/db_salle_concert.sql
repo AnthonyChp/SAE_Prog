@@ -1,8 +1,8 @@
--- MariaDB dump 10.19  Distrib 10.11.4-MariaDB, for debian-linux-gnu (x86_64)
+-- MariaDB dump 10.19  Distrib 10.11.3-MariaDB, for debian-linux-gnu (x86_64)
 --
 -- Host: localhost    Database: salle_concert
 -- ------------------------------------------------------
--- Server version	10.11.4-MariaDB-1~deb12u1
+-- Server version	10.11.3-MariaDB-1
 
 /*!40101 SET @OLD_CHARACTER_SET_CLIENT=@@CHARACTER_SET_CLIENT */;
 /*!40101 SET @OLD_CHARACTER_SET_RESULTS=@@CHARACTER_SET_RESULTS */;
@@ -58,6 +58,7 @@ CREATE TABLE `spectateurs` (
   `prenom` varchar(50) NOT NULL,
   `num_tel` int(10) DEFAULT NULL,
   `email` varchar(80) NOT NULL,
+  `mot_de_passe` varchar(255) NOT NULL,
   `id_concert` int(11) NOT NULL,
   `nb_place_achete` smallint(6) NOT NULL,
   `emplacement` varchar(3) NOT NULL,
@@ -75,9 +76,9 @@ CREATE TABLE `spectateurs` (
 LOCK TABLES `spectateurs` WRITE;
 /*!40000 ALTER TABLE `spectateurs` DISABLE KEYS */;
 INSERT INTO `spectateurs` VALUES
-(13,'Dupont','Jean',656245856,'jean.dupont@gmail.com',1,2,'A1',50),
-(14,'Martin','Sophie',676543210,'sophie.martin@gmail.com',2,1,'B3',70),
-(15,'Lefebvre','Pierre',654443333,'pierre.lefebvre@gmail.com',3,4,'C2',40);
+(13,'Dupont','Jean',656245856,'jean.dupont@gmail.com','gtrnet',1,2,'A1',50),
+(14,'Martin','Sophie',676543210,'sophie.martin@gmail.com','gtrnet',2,1,'B3',70),
+(15,'Lefebvre','Pierre',654443333,'pierre.lefebvre@gmail.com','gtrnet',3,4,'C2',40);
 /*!40000 ALTER TABLE `spectateurs` ENABLE KEYS */;
 UNLOCK TABLES;
 /*!40103 SET TIME_ZONE=@OLD_TIME_ZONE */;
@@ -90,4 +91,4 @@ UNLOCK TABLES;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2023-11-07 14:52:29
+-- Dump completed on 2023-11-22 14:07:11
