@@ -18,7 +18,7 @@ class SeatWindow(QWidget):
         for i in range(5):
             for j in range(5):
                 seat_btn = QPushButton(f"{chr(65 + i)}-{j + 1}")
-                pixmap = QPixmap(r'C:\Users\EGILBE05\Documents\siege.png')
+                pixmap = QPixmap('../images/siege.png')
                 pixmap = pixmap.scaledToWidth(50)
                 icon = QIcon(pixmap)
                 seat_btn.setIcon(icon)

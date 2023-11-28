@@ -1,6 +1,8 @@
 import sys
-from PyQt5.QtWidgets import QApplication, QMainWindow, QWidget, QVBoxLayout, QTabWidget, QLabel, QPushButton, QLineEdit, QTableWidget, QTableWidgetItem, QHBoxLayout
+from PyQt5.QtWidgets import QApplication, QMainWindow, QWidget, QDialog, QVBoxLayout, QTabWidget, QTextEdit, QPushButton, QLineEdit, QTableWidget, QTableWidgetItem, QHBoxLayout
 import mysql.connector
+
+#from modification_spectateurs_bdd import modification_spec_bdd
 
 class DatabaseAdminWindow(QMainWindow):
     def __init__(self):
@@ -116,6 +118,14 @@ class DatabaseAdminWindow(QMainWindow):
 
         layout.addLayout(button_layout)
 
+        # Shell-like window
+        self.shell_output = QTextEdit()
+        self.shell_output.setReadOnly(True)
+        layout.addWidget(self.shell_output)
+
+        # Connect edit button to function
+        self.edit_spectateur_button.clicked.connect(self.edit_spectateur)
+
     def setup_concerts_tab(self):
         layout = QVBoxLayout(self.concerts_tab)
 
@@ -138,6 +148,64 @@ class DatabaseAdminWindow(QMainWindow):
 
         layout.addLayout(button_layout)
 
+        # Shell-like window
+        self.shell_output = QTextEdit()
+        self.shell_output.setReadOnly(True)
+        layout.addWidget(self.shell_output)
+
+        # Connect edit button to function
+        self.edit_concert_button.clicked.connect(self.edit_concert)
+
+    def edit_spectateur(self):
+        selected_row = self.spectateurs_table.currentRow()
+        if selected_row >= 0:
+            id_spectateur = int(self.spectateurs_table.item(selected_row, 0).text())
+
+            # Retrieve current values
+            current_values = [self.spectateurs_table.item(selected_row, col_num).text()
+                              for col_num in range(self.spectateurs_table.columnCount())]
+
+            # Create and show the edit dialog
+            edit_dialog = modification_spec_bdd(id_spectateur)  # Passer l'ID ici
+            result = edit_dialog.exec_()
+
+            # Si l'utilisateur clique sur "Save" dans la boîte de dialogue
+            if result == QDialog.Accepted:
+                # Refresh the data
+                self.refresh_spectateurs_data()
+
+    def edit_concert(self):
+        selected_row = self.concerts_table.currentRow()
+        if selected_row >= 0:
+            id_concert = int(self.concerts_table.item(selected_row, 0).text())
+
+            # Retrieve current values
+            current_values = [self.concerts_table.item(selected_row, col_num).text()
+                              for col_num in range(self.concerts_table.columnCount())]
+
+            # Create and show the edit dialog
+            edit_dialog = EditDialog(["ID", "Titre", "Artiste", "Date", "Tarif"],
+                                     current_values, self)
+            result = edit_dialog.exec_()
+
+            # If the user clicks "Save" in the dialog
+            if result == QDialog.Accepted:
+                edited_values = edit_dialog.get_edited_values()
+
+                # Here, you would implement the code to update the database with the edited values
+                update_query = """
+                    UPDATE concerts
+                    SET titre = %s, artiste = %s, date = %s, tarif = %s
+                    WHERE id = %s
+                """
+                self.cursor.execute(update_query, (*edited_values, id_concert))
+                self.db_connection.commit()
+
+                # Print the edited values to the shell output
+                self.shell_output.append(f"Editing Concert ID {id_concert} with new values: {edited_values}")
+
+                # Refresh the data
+                self.refresh_concerts_data()
 
 def main():
     app = QApplication(sys.argv)
