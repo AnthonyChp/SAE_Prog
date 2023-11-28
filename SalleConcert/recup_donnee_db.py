@@ -1,6 +1,4 @@
 import mysql.connector
-from mysql.connector import Error
-import matplotlib.pyplot as plt
 
 # Fonction pour se connecter à la base de données
 def connect():
