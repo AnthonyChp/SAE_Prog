@@ -62,14 +62,6 @@ class SeatButton(QPushButton):
         super().__init__(concert_name)
         self.row = row
         self.col = col
-        self.clicked.connect(self.reserve_seat)
-
-    def reserve_seat(self):
-        if self.text() == "Réservé":
-            QMessageBox.warning(self, "Déjà réservé", f"Le siège {self.row+1}-{self.col+1} est déjà réservé.")
-        else:
-            self.setText("Réservé")
-            QMessageBox.information(self, "Réservation", f"Siège {self.row+1}-{self.col+1} réservé avec succès!")
 
 
 class ReservationApp(QWidget):
@@ -132,7 +124,7 @@ class ReservationApp(QWidget):
 
     def launch_create_account_script(self):
         # Lancer le script de création de compte
-        subprocess.run(['python3', 'creation_compte.py'])
+        subprocess.run(['python3', '/home/etudiant/Documents/SAE_Prog/SalleConcert/creation_compte.py'])
 
     def logout(self):
         self.username_label.clear()
