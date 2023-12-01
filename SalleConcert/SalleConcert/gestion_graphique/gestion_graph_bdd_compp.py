@@ -2,7 +2,7 @@ import sys
 from PyQt5.QtWidgets import QApplication, QMainWindow, QWidget, QDialog, QVBoxLayout, QTabWidget, QTextEdit, QPushButton, QLineEdit, QTableWidget, QTableWidgetItem, QHBoxLayout
 import mysql.connector
 
-#from modification_spectateurs_bdd import modification_spec_bdd
+from modif_spectateurs import modif_spec
 
 class DatabaseAdminWindow(QMainWindow):
     def __init__(self):
@@ -166,8 +166,8 @@ class DatabaseAdminWindow(QMainWindow):
                               for col_num in range(self.spectateurs_table.columnCount())]
 
             # Create and show the edit dialog
-            edit_dialog = modification_spec_bdd(id_spectateur)  # Passer l'ID ici
-            result = edit_dialog.exec_()
+            edit_dialog = modif_spec(id_spectateur)  # Passer l'ID ici
+            result = edit_dialog.show()
 
             # Si l'utilisateur clique sur "Save" dans la boîte de dialogue
             if result == QDialog.Accepted:

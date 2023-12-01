@@ -3,7 +3,7 @@ from PyQt5.QtWidgets import QApplication, QWidget, QPushButton, QMessageBox, QGr
 import mysql.connector
 
 
-class modification_spec_bdd(QWidget):
+class modif_spec(QWidget):
     def __init__(self, user_id):
         super().__init__()
 
@@ -115,6 +115,6 @@ class modification_spec_bdd(QWidget):
 if __name__ == '__main__':
     app = QApplication(sys.argv)
     user_id_to_modify = 13  # Remplacez ceci par l'ID de l'utilisateur que vous souhaitez modifier
-    modification_app = modification_spec_bdd(user_id_to_modify)
+    modification_app = modif_spec(user_id_to_modify)
     modification_app.show()
     sys.exit(app.exec_())
