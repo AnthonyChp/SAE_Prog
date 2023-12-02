@@ -1,11 +1,11 @@
-from PyQt5.QtWidgets import QLabel, QMainWindow, QWidget, QDialog, QVBoxLayout, QTabWidget, QTextEdit, QPushButton, QLineEdit, QTableWidget, QTableWidgetItem, QHBoxLayout
+from PyQt5.QtWidgets import QLabel, QDialog, QVBoxLayout, QPushButton, QLineEdit
 
-class ModifBDD(QDialog):
-    def __init__(self, data_to_edit, data_manager):
+class ModifSpectateurs(QDialog):
+    def __init__(self , data_to_edit, donnees_spectateurs):
         super().__init__()
-        self.data_manager = data_manager
+        self.donnees_spectateurs = donnees_spectateurs
 
-        self.setWindowTitle('Edit Row')
+        self.setWindowTitle('Edit Spectateurs')
         self.resize(300, 200)
 
         self.layout = QVBoxLayout(self)

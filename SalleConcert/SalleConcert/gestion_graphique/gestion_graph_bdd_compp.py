@@ -2,7 +2,7 @@ import sys
 from PyQt5.QtWidgets import QApplication, QMainWindow, QWidget, QDialog, QVBoxLayout, QTabWidget, QTextEdit, QPushButton, QLineEdit, QTableWidget, QTableWidgetItem, QHBoxLayout
 import mysql.connector
 
-from modif_spectateurs import modif_spec
+#from modif_spectateurs import modif_spec
 
 class DatabaseAdminWindow(QMainWindow):
     def __init__(self):
