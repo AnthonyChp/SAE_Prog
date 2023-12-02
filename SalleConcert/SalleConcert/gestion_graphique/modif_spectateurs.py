@@ -5,7 +5,7 @@ class ModifSpectateurs(QDialog):
         super().__init__()
         self.donnees_spectateurs = donnees_spectateurs
 
-        self.setWindowTitle('Edit Spectateurs')
+        self.setWindowTitle('Modification de spectateur')
         self.resize(300, 200)
 
         self.layout = QVBoxLayout(self)

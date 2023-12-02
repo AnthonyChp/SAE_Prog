@@ -1,9 +1,14 @@
-from PyQt5.QtWidgets import QMainWindow, QWidget, QMessageBox, QVBoxLayout, QTabWidget, QPushButton, QTableWidget, QTableWidgetItem
+from PyQt5.QtWidgets import QMainWindow, QWidget, QDialog, QMessageBox, QVBoxLayout, QTabWidget, QPushButton, QTableWidget, QTableWidgetItem
+
+import bcrypt
 
 from modif_spectateurs import ModifSpectateurs
 from modif_concerts import ModifConcerts
 from recup_spectateurs import DataSpectateurs
 from recup_concerts import DataConcerts
+from ajout_spectateurs import AjoutSpectateurs
+from ajout_concerts import AjoutConcerts
+
 
 class AppGestion(QMainWindow):
     def __init__(self, donnees_spectateurs , donnees_concerts):
@@ -27,7 +32,7 @@ class AppGestion(QMainWindow):
         self.table_spectateurs = QTableWidget()
         self.onglet1_layout.addWidget(self.table_spectateurs)
         self.bouton_refresh_spectateurs = QPushButton("Rafraîchir")
-        self.bouton_ajout_spectateurs = QPushButton("Ajouter une ligne")
+        self.bouton_ajout_spectateurs = QPushButton("Ajouter un spectateur")
         self.bouton_modif_spectateurs = QPushButton("Modifier la ligne")
         self.bouton_supp_spectateurs = QPushButton("Supprimer la ligne")
         self.onglet1_layout.addWidget(self.bouton_refresh_spectateurs)
@@ -43,7 +48,7 @@ class AppGestion(QMainWindow):
         self.table_concerts = QTableWidget()
         self.onglet2_layout.addWidget(self.table_concerts)
         self.bouton_refresh_concerts = QPushButton("Rafraîchir")
-        self.bouton_ajout_concerts = QPushButton("Ajouter une ligne")
+        self.bouton_ajout_concerts = QPushButton("Ajouter un concert")
         self.bouton_modif_concerts = QPushButton("Modifier la ligne")
         self.bouton_supp_concerts = QPushButton("Supprimer la ligne")
         self.onglet2_layout.addWidget(self.bouton_refresh_concerts)
@@ -53,13 +58,13 @@ class AppGestion(QMainWindow):
 
 
         self.bouton_refresh_spectateurs.clicked.connect(self.refresh_donnees_spectateurs)
-        self.bouton_ajout_spectateurs.clicked.connect(self.ajout_donnees_spectateurs)
+        self.bouton_ajout_spectateurs.clicked.connect(self.ajout_spectateurs)
         self.bouton_modif_spectateurs.clicked.connect(self.modif_donnees_spectateurs)
         self.bouton_supp_spectateurs.clicked.connect(self.supp_spectateurs)
 
 
         self.bouton_refresh_concerts.clicked.connect(self.refresh_donnees_concerts)
-        self.bouton_ajout_concerts.clicked.connect(self.ajout_donnees_concerts)
+        self.bouton_ajout_concerts.clicked.connect(self.ajout_concerts)
         self.bouton_modif_concerts.clicked.connect(self.modif_donnees_concerts)
         self.bouton_supp_concerts.clicked.connect(self.supp_concerts)
 
@@ -84,9 +89,12 @@ class AppGestion(QMainWindow):
                 self.table_spectateurs.setItem(row_number, column_number, QTableWidgetItem(str(column_data)))
 
 
-    def ajout_donnees_spectateurs(self):
+    def ajout_spectateurs(self):
 
-        pass
+        AjoutSpectateurs(self.donnees_spectateurs).exec_()
+
+        self.refresh_donnees_spectateurs()
+
 
     def modif_donnees_spectateurs(self):
         selected_row = self.table_spectateurs.currentRow()
@@ -111,8 +119,6 @@ class AppGestion(QMainWindow):
                                                QMessageBox.Yes | QMessageBox.No)
 
             if confirmation == QMessageBox.Yes:
-                # Supprimer la ligne sélectionnée
-                
 
                                 # Récupérer l'ID de la ligne sélectionnée
                 id_a_supprimer = self.table_spectateurs.item(selected_row, 0).text()
@@ -121,7 +127,7 @@ class AppGestion(QMainWindow):
                 delete_query = "DELETE FROM spectateurs WHERE ID = %s"
 
                 self.donnees_spectateurs.execute_spectateurs_query(delete_query, (id_a_supprimer,))
-                #self.connexion_bdd.commit()
+
 
                 self.table_spectateurs.removeRow(selected_row)
 
@@ -142,9 +148,12 @@ class AppGestion(QMainWindow):
             for column_number, column_data in enumerate(row_data):
                 self.table_concerts.setItem(row_number, column_number, QTableWidgetItem(str(column_data)))
 
-    def ajout_donnees_concerts(self):
+    def ajout_concerts(self):
 
-        pass
+
+        AjoutConcerts(self.donnees_concerts).exec_()
+
+        self.refresh_donnees_concerts()
 
 
     def modif_donnees_concerts(self):
@@ -160,7 +169,6 @@ class AppGestion(QMainWindow):
                 update_query = "UPDATE concerts SET titre = %s, artiste = %s, date = %s, tarif = %s WHERE ID = %s"
                 self.donnees_concerts.execute_concerts_query(update_query, edited_data[1:] + [edited_data[0]])
 
-                # Refresh the data in the table
                 self.refresh_donnees_concerts()
 
     def supp_concerts(self):
@@ -180,7 +188,6 @@ class AppGestion(QMainWindow):
                 delete_query = "DELETE FROM concerts WHERE ID = %s"
 
                 self.donnees_concerts.execute_concerts_query(delete_query, (id_a_supprimer,))
-                #self.connexion_bdd.commit()
 
                 self.table_concerts.removeRow(selected_row)
 

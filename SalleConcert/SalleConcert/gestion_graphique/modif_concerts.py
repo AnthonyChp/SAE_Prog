@@ -5,7 +5,7 @@ class ModifConcerts(QDialog):
         super().__init__()
         self.donnees_concerts = donnees_concerts
 
-        self.setWindowTitle('Edit Concert')
+        self.setWindowTitle('Modification de concert')
         self.resize(300, 200)
 
         self.layout = QVBoxLayout(self)
