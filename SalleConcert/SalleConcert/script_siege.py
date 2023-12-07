@@ -2,6 +2,8 @@ import sys
 from PyQt5.QtWidgets import QApplication, QWidget, QGridLayout, QPushButton, QVBoxLayout, QLabel
 from PyQt5.QtGui import QPixmap, QIcon
 from PyQt5.QtCore import Qt
+import os 
+
 
 class SeatWindow(QWidget):
     def __init__(self):
@@ -30,6 +32,8 @@ class SeatWindow(QWidget):
 
 def main():
     app = QApplication(sys.argv)
+    current_directory = os.path.dirname(os.path.realpath(__file__))
+    os.chdir(os.path.join(current_directory, "..", "images"))
     seat_window = SeatWindow()
     sys.exit(app.exec_())
 
