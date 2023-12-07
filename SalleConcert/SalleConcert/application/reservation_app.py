@@ -1,15 +1,12 @@
-from PyQt5.QtWidgets import QWidget, QPushButton, QLabel, QGridLayout, QDialog, QApplication, QMessageBox
+from PyQt5.QtWidgets import QWidget, QPushButton, QLabel, QGridLayout, QDialog, QMessageBox
 import mysql.connector
 import subprocess
 from login_dialog import LoginDialog
 from seat_button import SeatButton
 from PyQt5.QtCore import Qt
-import sys
 from functools import partial
 
 class ReservationApp(QWidget):
-    current_user = None  # Variable de classe pour stocker le nom de l'utilisateur connecté
-
     def __init__(self):
         super().__init__()
 
@@ -20,9 +17,9 @@ class ReservationApp(QWidget):
         Programme qui nous permet de faire tout l'affichage de base de notre application
         '''
         self.setWindowTitle('Réservation de Concert')
-        self.showMaximized()  # Met la fenêtre à la taille de l'écran
+        self.showMaximized()  # Met la fenêtre a la taille de l'écran
 
-        # --- Création de tous nos boutons ---#
+        #--- Création de tous nos boutons ---#
 
         self.login_button = QPushButton('Se connecter')
         self.login_button.clicked.connect(self.show_login_dialog)
@@ -36,22 +33,28 @@ class ReservationApp(QWidget):
 
         self.username_label = QLabel()
 
-        # ------------------------------------#
+        #------------------------------------#
 
-        # --- Création de tous nos layout pour placer nos boutons ---#
+        #--- Création de tous nos layout pour placer nos boutons ---#
 
         layout = QGridLayout()
 
-        layout.addWidget(self.login_button, 1, 1, 1, 5, alignment=Qt.AlignTop | Qt.AlignLeft)
-        layout.addWidget(self.create_account_button, 1, 6, 1, 5, alignment=Qt.AlignTop | Qt.AlignRight)
-        layout.addWidget(self.manage_database_button, 1, 6, 1, 5, alignment=Qt.AlignTop | Qt.AlignRight)
-        layout.addWidget(self.username_label, 3, 1, 1, 10)
+        row_count = 6  # Nombre total de lignes dans la grille
+        layout.setRowStretch(0, 1)  # Ligne vide au-dessus pour déplacer les boutons plus haut
+        layout.setRowStretch(1, 1)  # Ligne vide pour l'espacement entre les boutons et les concerts
+        layout.setRowStretch(row_count, 1)  # Ligne vide en dessous pour l'espacement
+
+        # Ajout des boutons "Se connecter" et "Créer un compte"
+        layout.addWidget(self.login_button, 0, 1, 1, 5, alignment=Qt.AlignTop | Qt.AlignLeft)
+        layout.addWidget(self.create_account_button, 0, 6, 1, 5, alignment=Qt.AlignTop | Qt.AlignRight)
+        layout.addWidget(self.manage_database_button, 0, 6, 1, 5, alignment=Qt.AlignTop | Qt.AlignRight)
+        layout.addWidget(self.username_label, 2, 1, 1, 10)  # Réorganiser l'emplacement du label
 
         self.seat_buttons = []
 
-        # -----------------------------------------------------------#
+        #-----------------------------------------------------------#
 
-        # Connexion à la base de données
+        # Connexion à la base de donnée
         connection = mysql.connector.connect(
             host='localhost',
             user='admin',
@@ -64,19 +67,23 @@ class ReservationApp(QWidget):
         cursor.execute("SELECT titre FROM concerts")
         concerts = cursor.fetchall()
 
+        row_count = 6  # Nombre total de lignes dans la grille
+        layout.setRowStretch(0, 1)  # Ligne vide au-dessus pour déplacer les boutons plus haut
+        layout.setRowStretch(row_count, 1)  # Ligne vide en dessous pour l'espacement
+
         # Ajout des boutons de siège avec les noms des concerts
         for i, concert in enumerate(concerts):
             # Calculer le nombre de lignes nécessaires pour centrer verticalement
             rows_needed = (len(concerts) - 1) // 3 + 1
-            row = i // 3 + 3
-
-            # Centrer horizontalement
+            row = i // 3 + 1
+            
+            # Calculer la colonne pour centrer horizontalement
             col = i % 3 + 1 + (3 - (len(concerts) % 3 + 1) // 2)
-
-            seat_button = SeatButton(row - 2, col, concert[0])
+            
+            seat_button = SeatButton(row, col, concert[0])  # Ajustement de la ligne
             seat_button.clicked.connect(partial(self.handle_concert_click, concert[0]))
             self.seat_buttons.append(seat_button)
-            layout.addWidget(seat_button, row, col)
+            layout.addWidget(seat_button, row + 2, col)  # Ajustement de la position en ligne
 
         connection.close()
 
@@ -106,7 +113,7 @@ class ReservationApp(QWidget):
 
     def show_admin_controls(self):
         '''
-        Affichage de l'interface 'Admin' lorsqu'il se connecte
+        Affichage de l'interface 'Admin' losqu'il se connecte
         '''
         self.username_label.setText("Connecté en tant qu'Admin")
         self.login_button.setText('Déconnexion')
@@ -124,6 +131,7 @@ class ReservationApp(QWidget):
         Lancer le script de création de compte
         '''
         subprocess.run(['python3', '/home/etudiant/Documents/SAE_Prog/SalleConcert/SalleConcert/application/creation_compte.py'])
+
 
     def logout(self):
         '''
