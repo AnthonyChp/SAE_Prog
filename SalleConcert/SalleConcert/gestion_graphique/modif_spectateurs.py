@@ -1,7 +1,7 @@
 from PyQt5.QtWidgets import QLabel, QDialog, QVBoxLayout, QPushButton, QLineEdit
 
 class ModifSpectateurs(QDialog):
-    def __init__(self , data_to_edit, donnees_spectateurs):
+    def __init__(self, data_to_edit, donnees_spectateurs):
         super().__init__()
         self.donnees_spectateurs = donnees_spectateurs
 

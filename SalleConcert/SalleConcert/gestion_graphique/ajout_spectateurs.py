@@ -1,5 +1,4 @@
 from PyQt5.QtWidgets import QLabel, QDialog, QGridLayout, QPushButton, QLineEdit, QMessageBox
-import mysql.connector
 import bcrypt
 
 class AjoutSpectateurs(QDialog):
