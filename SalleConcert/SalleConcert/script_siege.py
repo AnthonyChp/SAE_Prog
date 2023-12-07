@@ -57,30 +57,29 @@ class SeatWindow(QWidget):
             QMessageBox.warning(self, "Avertissement", "Aucun siège sélectionné!")
             return
 
-        try:
             # Connexion à la base de données MySQL
-            connection = mysql.connector.connect(
-                host='localhost',
-                user='admin',
-                password='admin',
-                database='salle_concert'
-            )
+        connection = mysql.connector.connect(
+            host='localhost',
+            user='admin',
+            password='admin',
+            database='salle_concert'
+        )
 
-            cursor = connection.cursor()
+        cursor = connection.cursor()
 
             # Insertion des sièges sélectionnés dans la table MySQL
-            for seat in self.selected_seats:
-                cursor.execute("INSERT INTO spectateurs (emplacement) VALUES (%s)", (seat,))
-            
-            connection.commit()
-            connection.close()
+        for seat in self.selected_seats:
+            sql= "INSERT INTO spectateurs (emplacement) VALUES (%s)"
+        value = [seat]
+        cursor.execute(sql, value)
+        
 
-            QMessageBox.information(self, "Information", "Sièges enregistrés avec succès!")
+        connection.commit()
+        print(cursor.rowcount, "lignes insérées.")
+        connection.close()
 
-        except mysql.connector.Error as e:
-            print("Erreur lors de l'enregistrement des sièges :", e)
-            QMessageBox.critical(self, "Erreur", "Erreur lors de l'enregistrement des sièges!")
-    
+        QMessageBox.information(self, "Information", "Sièges enregistrés avec succès!")
+
 
 
 def main():
