@@ -90,13 +90,11 @@ class AjoutSpectateurs(QDialog):
         hashed_password = bcrypt.hashpw(password.encode('utf-8'), bcrypt.gensalt())
 
         # Construire la requête INSERT
-        query_ajout = "INSERT INTO spectateurs (nom, prenom, num_tel, email , mot_de_passe) VALUES (%s, %s, %s, %s, %s)"
-        valeurs = (nom, prenom, num_tel, email, hashed_password ) # Remplacez les points de suspension par d'autres valeurs
+        query_ajout = "INSERT INTO spectateurs (nom, prenom, num_tel, email , mot_de_passe, id_concert, nb_place_achete, emplacement, tarif) VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s)"
+        valeurs = (nom, prenom, num_tel, email, hashed_password, id_concert or None, nb_place_achete or None, emplacement or None, tarif or None) # Remplacez les points de suspension par d'autres valeurs
 
    
         # Exécuter la requête INSERT dans la base de données
         self.donnees_spectateurs.execute_spectateurs_query(query_ajout, valeurs)
 
-
         self.accept()
-

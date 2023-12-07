@@ -100,17 +100,8 @@ class AppGestion(QMainWindow):
         selected_row = self.table_spectateurs.currentRow()
         if selected_row != -1:
             data_to_edit = [self.table_spectateurs.item(selected_row, col).text() for col in range(self.table_spectateurs.columnCount())]
-
-            edit_dialog = ModifSpectateurs(data_to_edit, self.donnees_spectateurs)
-            if edit_dialog.exec_():
-                edited_data = edit_dialog.get_edited_data()
-
-                # Update the database with the edited data
-                update_query = "UPDATE spectateurs SET nom = %s, prenom = %s, num_tel = %s, email = %s, mot_de_passe = %s, id_concert = %s, nb_place_achete = %s, emplacement = %s, tarif = %s WHERE ID = %s"
-                self.donnees_spectateurs.execute_spectateurs_query(update_query, edited_data[1:] + [edited_data[0]])
-
-                # Refresh the data in the table
-                self.refresh_donnees_spectateurs()
+            ModifSpectateurs(data_to_edit, self.donnees_spectateurs).exec_()
+            self.refresh_donnees_spectateurs()
 
     def supp_spectateurs(self):
         selected_row = self.table_spectateurs.currentRow()
