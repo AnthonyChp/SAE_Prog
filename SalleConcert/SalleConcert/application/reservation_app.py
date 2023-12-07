@@ -17,16 +17,26 @@ class ReservationApp(QWidget):
 
         self.login_button = QPushButton('Se connecter')
         self.login_button.clicked.connect(self.show_login_dialog)
+
         self.create_account_button = QPushButton('Créer un compte')
         self.create_account_button.clicked.connect(self.launch_create_account_script)
+
+        self.manage_database_button = QPushButton('Gérer la base de données')
+        self.manage_database_button.clicked.connect(self.manage_database)
+        self.manage_database_button.setVisible(False)
+
         self.username_label = QLabel()
 
         layout = QGridLayout()
 
-
         layout.addWidget(self.login_button, 1, 1, 1, 5, alignment=Qt.AlignTop | Qt.AlignLeft)
+
         layout.addWidget(self.create_account_button, 1, 6, 1, 5, alignment=Qt.AlignTop | Qt.AlignRight)
-        layout.addWidget(self.username_label, 2, 1, 1, 10)
+
+        layout.addWidget(self.manage_database_button, 1, 6, 1, 5, alignment=Qt.AlignTop | Qt.AlignRight)
+
+        layout.addWidget(self.username_label, 3, 1, 1, 10)
+
         self.seat_buttons = []
 
         # Connexion à la base de donnée
@@ -64,17 +74,34 @@ class ReservationApp(QWidget):
     def show_login_dialog(self):
         if self.login_button.text() == 'Se connecter':
             login_dialog = LoginDialog(self)
+
             if login_dialog.exec_() == QDialog.Accepted:
                 email = login_dialog.get_email()
-                self.username_label.setText(f"Connecté en tant que {email}")
-                self.login_button.setText('Déconnexion')
+                if email == 'admin@salle_concert.fr':
+                    self.show_admin_controls()
+                else:
+                    self.username_label.setText(f"Connecté en tant que {email}")
+                    self.login_button.setText('Déconnexion')
+                    self.create_account_button.setVisible(False)
         else:
             self.logout()
 
+    def show_admin_controls(self):
+        self.username_label.setText("Connecté en tant qu'Admin")
+        self.login_button.setText('Déconnexion')
+        self.create_account_button.setVisible(False)
+        self.manage_database_button.setVisible(True)
+
+    def manage_database(self):
+        subprocess.run(['python3', '/home/etudiant/Documents/SAE_Prog/SalleConcert/SalleConcert/gestion_graphique/main.py'])
+
     def launch_create_account_script(self):
         # Lancer le script de création de compte
-        subprocess.run(['python3', '/home/etudiant/Documents/SAE_Prog/SalleConcert/application/creation_compte.py'])
+        subprocess.run(['python3', '/home/etudiant/Documents/SAE_Prog/SalleConcert/SalleConcert/application/creation_compte.py'])
+
 
     def logout(self):
         self.username_label.clear()
         self.login_button.setText('Se connecter')
+        self.create_account_button.setVisible(True)
+        self.manage_database_button.setVisible(False)
