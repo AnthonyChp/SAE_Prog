@@ -151,16 +151,8 @@ class AppGestion(QMainWindow):
         selected_row = self.table_concerts.currentRow()
         if selected_row != -1:
             data_to_edit = [self.table_concerts.item(selected_row, col).text() for col in range(self.table_concerts.columnCount())]
-
-            edit_dialog = ModifConcerts(data_to_edit, self.donnees_concerts)
-            if edit_dialog.exec_():
-                edited_data = edit_dialog.get_edited_data()
-
-                # Update the database with the edited data
-                update_query = "UPDATE concerts SET titre = %s, artiste = %s, date = %s, tarif = %s WHERE ID = %s"
-                self.donnees_concerts.execute_concerts_query(update_query, edited_data[1:] + [edited_data[0]])
-
-                self.refresh_donnees_concerts()
+            ModifConcerts(data_to_edit, self.donnees_concerts).exec_()
+            self.refresh_donnees_concerts()
 
     def supp_concerts(self):
         selected_row = self.table_concerts.currentRow()
