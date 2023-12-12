@@ -1,9 +1,9 @@
 """
-.. module:: exemple_ecriture_module
+.. module:: reservation_app
    :platform: Unix, Windows
-   :synopsis: Exemple d'écriture d'un module pour autodoc par Sphinx.
+   :synopsis: Confection de l'application Salle_Concert.
 
-.. moduleauthor:: Nom Prenom <prenom.nom@etu.univ-poitiers.fr>
+.. moduleauthor:: Chapus Anthony <anthony.chapus1002@etu.univ-poitiers.fr>
 
 """
 

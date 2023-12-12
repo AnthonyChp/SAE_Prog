@@ -1,9 +1,43 @@
+"""
+.. module:: main
+   :platform: Unix, Windows
+   :synopsis: Lancement et vérification de l'enregistrement d'un utilisateur dans la base de donnée
+
+.. moduleauthor:: Chapus Anthony <anthony.chapus1002@etu.univ-poitiers.fr>
+
+"""
+
 from PyQt5.QtWidgets import QDialog, QLabel, QVBoxLayout, QLineEdit, QPushButton, QMessageBox
 from PyQt5.QtCore import Qt
 import mysql.connector
 import bcrypt
 
 class LoginDialog(QDialog):
+    """
+    Cette classe permet à l'utilisateur de saisir son adresse e-mail et son mot de passe,
+    puis de tenter de se connecter en vérifiant les informations dans une base de données.
+
+    :ivar username_label: Étiquette pour le champ de saisie de l'adresse e-mail.
+    :vartype username_label: QLabel
+    :ivar username_edit: Champ de saisie de l'adresse e-mail.
+    :vartype username_edit: QLineEdit
+    :ivar password_label: Étiquette pour le champ de saisie du mot de passe.
+    :vartype password_label: QLabel
+    :ivar password_edit: Champ de saisie du mot de passe avec masquage.
+    :vartype password_edit: QLineEdit
+    :ivar login_button: Bouton pour tenter la connexion.
+    :vartype login_button: QPushButton
+
+    :example:
+
+    .. code-block:: python
+
+        login_dialog = LoginDialog(parent_instance)
+        if login_dialog.exec_() == QDialog.Accepted:
+            email = login_dialog.get_email()
+            # Utiliser l'adresse e-mail récupérée
+    """
+
     def __init__(self, parent=None):
         super(LoginDialog, self).__init__(parent)
 
@@ -26,6 +60,19 @@ class LoginDialog(QDialog):
         self.login_button.clicked.connect(self.try_login)
 
     def try_login(self):
+        """
+        Tente de connecter l'utilisateur en vérifiant les informations dans la base de données.
+
+        :return: Aucun
+        :rtype: None
+        :raises: Aucune
+
+        :example:
+
+        .. code-block:: python
+
+            self.try_login()
+        """
         email = self.username_edit.text()
         password = self.password_edit.text()
 
@@ -52,4 +99,17 @@ class LoginDialog(QDialog):
         connection.close()
 
     def get_email(self):
+        """
+        Récupère l'adresse e-mail saisie par l'utilisateur.
+
+        :return: L'adresse e-mail saisie par l'utilisateur.
+        :rtype: str
+        :raises: Aucune
+
+        :example:
+
+        .. code-block:: python
+
+            email = self.get_email()
+        """
         return self.username_edit.text()

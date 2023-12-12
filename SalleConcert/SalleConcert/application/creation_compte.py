@@ -1,9 +1,51 @@
+"""
+.. module:: main
+   :platform: Unix, Windows
+   :synopsis: Lancement de la fenêtre de création de compte
+
+.. moduleauthor:: Chapus Anthony <anthony.chapus1002@etu.univ-poitiers.fr>
+
+"""
 import sys
 from PyQt5.QtWidgets import QApplication, QWidget, QPushButton, QMessageBox, QGridLayout, QVBoxLayout, QLabel, QLineEdit
 import mysql.connector
 import bcrypt
 
 class RegistrationApp(QWidget):
+    """
+    Cette classe permet à l'utilisateur de saisir les informations nécessaires pour créer un compte,
+    puis d'envoyer ces informations à une base de données après un processus de hachage du mot de passe.
+
+    :ivar nom_label: Étiquette pour le champ de saisie du nom.
+    :vartype nom_label: QLabel
+    :ivar nom_edit: Champ de saisie du nom.
+    :vartype nom_edit: QLineEdit
+    :ivar prenom_label: Étiquette pour le champ de saisie du prénom.
+    :vartype prenom_label: QLabel
+    :ivar prenom_edit: Champ de saisie du prénom.
+    :vartype prenom_edit: QLineEdit
+    :ivar num_tel_label: Étiquette pour le champ de saisie du numéro de téléphone.
+    :vartype num_tel_label: QLabel
+    :ivar num_tel_edit: Champ de saisie du numéro de téléphone.
+    :vartype num_tel_edit: QLineEdit
+    :ivar email_label: Étiquette pour le champ de saisie de l'adresse e-mail.
+    :vartype email_label: QLabel
+    :ivar email_edit: Champ de saisie de l'adresse e-mail.
+    :vartype email_edit: QLineEdit
+    :ivar password_label: Étiquette pour le champ de saisie du mot de passe.
+    :vartype password_label: QLabel
+    :ivar password_edit: Champ de saisie du mot de passe avec masquage.
+    :vartype password_edit: QLineEdit
+    :ivar register_button: Bouton pour créer un compte.
+    :vartype register_button: QPushButton
+
+    :example:
+
+    .. code-block:: python
+
+        registration_app = RegistrationApp()
+        registration_app.show()
+    """
     def __init__(self):
         super().__init__()
 

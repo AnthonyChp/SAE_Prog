@@ -1,3 +1,11 @@
+"""
+.. module:: main
+   :platform: Unix, Windows
+   :synopsis: Lancement de l'application.
+
+.. moduleauthor:: Chapus Anthony <anthony.chapus1002@etu.univ-poitiers.fr>
+
+"""
 import sys
 from PyQt5.QtWidgets import QApplication
 from reservation_app import ReservationApp
