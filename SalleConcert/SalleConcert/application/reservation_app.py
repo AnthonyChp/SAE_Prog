@@ -1,25 +1,62 @@
-from PyQt5.QtWidgets import QWidget, QPushButton, QLabel, QGridLayout, QDialog, QMessageBox
+"""
+.. module:: exemple_ecriture_module
+   :platform: Unix, Windows
+   :synopsis: Exemple d'écriture d'un module pour autodoc par Sphinx.
+
+.. moduleauthor:: Nom Prenom <prenom.nom@etu.univ-poitiers.fr>
+
+"""
+
+from PyQt5.QtWidgets import QWidget, QPushButton, QLabel, QGridLayout, QDialog, QApplication, QMessageBox
 import mysql.connector
 import subprocess
 from login_dialog import LoginDialog
 from seat_button import SeatButton
 from PyQt5.QtCore import Qt
+import sys
 from functools import partial
 
 class ReservationApp(QWidget):
+    """
+    Classe principale de l'application de réservation de concerts.
+
+    Cette classe gère l'interface utilisateur, la connexion/déconnexion des utilisateurs,
+    l'affichage des informations de l'utilisateur, et l'interaction avec la base de données.
+
+    :ivar current_user: Variable de classe pour stocker le nom de l'utilisateur connecté.
+    :vartype current_user: str or None
+
+    :example:
+
+    .. code-block:: python
+
+        app_instance = ReservationApp()
+        app_instance.show()
+    """
+    current_user = None  # Variable de classe pour stocker le nom de l'utilisateur connecté
+
     def __init__(self):
         super().__init__()
 
         self.init_ui()
 
     def init_ui(self):
-        '''
-        Programme qui nous permet de faire tout l'affichage de base de notre application
-        '''
-        self.setWindowTitle('Réservation de Concert')
-        self.showMaximized()  # Met la fenêtre a la taille de l'écran
+        """Initialise l'interface utilisateur de l'application, mettant en place l'affichage de base.
+    
+        :return: Aucun
+        :rtype: None
+        :raises: Aucune
 
-        #--- Création de tous nos boutons ---#
+        :example:
+
+        .. code-block:: python
+
+            instance.init_ui()
+        """
+        self.setWindowTitle('Réservation de Concert')
+        self.showMaximized()  # Met la fenêtre à la taille de l'écran
+
+        # --- Création de tous nos boutons ---#
 
         self.login_button = QPushButton('Se connecter')
         self.login_button.clicked.connect(self.show_login_dialog)
@@ -33,28 +70,22 @@ class ReservationApp(QWidget):
 
         self.username_label = QLabel()
 
-        #------------------------------------#
+        # ------------------------------------#
 
-        #--- Création de tous nos layout pour placer nos boutons ---#
+        # --- Création de tous nos layout pour placer nos boutons ---#
 
         layout = QGridLayout()
 
-        row_count = 6  # Nombre total de lignes dans la grille
-        layout.setRowStretch(0, 1)  # Ligne vide au-dessus pour déplacer les boutons plus haut
-        layout.setRowStretch(1, 1)  # Ligne vide pour l'espacement entre les boutons et les concerts
-        layout.setRowStretch(row_count, 1)  # Ligne vide en dessous pour l'espacement
-
-        # Ajout des boutons "Se connecter" et "Créer un compte"
-        layout.addWidget(self.login_button, 0, 1, 1, 5, alignment=Qt.AlignTop | Qt.AlignLeft)
-        layout.addWidget(self.create_account_button, 0, 6, 1, 5, alignment=Qt.AlignTop | Qt.AlignRight)
-        layout.addWidget(self.manage_database_button, 0, 6, 1, 5, alignment=Qt.AlignTop | Qt.AlignRight)
-        layout.addWidget(self.username_label, 2, 1, 1, 10)  # Réorganiser l'emplacement du label
+        layout.addWidget(self.login_button, 1, 1, 1, 5, alignment=Qt.AlignTop | Qt.AlignLeft)
+        layout.addWidget(self.create_account_button, 1, 6, 1, 5, alignment=Qt.AlignTop | Qt.AlignRight)
+        layout.addWidget(self.manage_database_button, 1, 6, 1, 5, alignment=Qt.AlignTop | Qt.AlignRight)
+        layout.addWidget(self.username_label, 3, 1, 1, 10)
 
         self.seat_buttons = []
 
-        #-----------------------------------------------------------#
+        # -----------------------------------------------------------#
 
-        # Connexion à la base de donnée
+        # Connexion à la base de données
         connection = mysql.connector.connect(
             host='localhost',
             user='admin',
@@ -67,23 +98,19 @@ class ReservationApp(QWidget):
         cursor.execute("SELECT titre FROM concerts")
         concerts = cursor.fetchall()
 
-        row_count = 6  # Nombre total de lignes dans la grille
-        layout.setRowStretch(0, 1)  # Ligne vide au-dessus pour déplacer les boutons plus haut
-        layout.setRowStretch(row_count, 1)  # Ligne vide en dessous pour l'espacement
-
         # Ajout des boutons de siège avec les noms des concerts
         for i, concert in enumerate(concerts):
             # Calculer le nombre de lignes nécessaires pour centrer verticalement
             rows_needed = (len(concerts) - 1) // 3 + 1
-            row = i // 3 + 1
-            
-            # Calculer la colonne pour centrer horizontalement
+            row = i // 3 + 3
+
+            # Centrer horizontalement
             col = i % 3 + 1 + (3 - (len(concerts) % 3 + 1) // 2)
-            
-            seat_button = SeatButton(row, col, concert[0])  # Ajustement de la ligne
+
+            seat_button = SeatButton(row - 2, col, concert[0])
             seat_button.clicked.connect(partial(self.handle_concert_click, concert[0]))
             self.seat_buttons.append(seat_button)
-            layout.addWidget(seat_button, row + 2, col)  # Ajustement de la position en ligne
+            layout.addWidget(seat_button, row, col)
 
         connection.close()
 
@@ -91,11 +118,21 @@ class ReservationApp(QWidget):
         self.show()
 
     def show_login_dialog(self):
-        '''
-        Permet de lancer la fonction lorsque le bouton 'se connecter' afin de récupérer l'utilisateur dans la base
-        de données. Ajout d'une vérification si c'est un admin qui est connecté sinon cela remplace le bouton
-        se connecter en 'Déconnexion'
-        '''
+        """ Lance la boîte de dialogue de connexion lorsque le bouton 'Se connecter' est cliqué,
+        permettant la récupération des informations de l'utilisateur depuis la base de données.
+        Vérifie si l'utilisateur connecté est un administrateur et met à jour l'interface utilisateur en conséquence.
+        Remplace le bouton 'Se connecter' par 'Déconnexion' si l'utilisateur n'est pas un administrateur.
+
+        :return: Aucun
+        :rtype: None
+        :raises: Aucune
+
+        :example:
+
+        .. code-block:: python
+
+        instance.show_login_dialog()
+        """
         if self.login_button.text() == 'Se connecter':
             login_dialog = LoginDialog(self)
 
@@ -112,40 +149,86 @@ class ReservationApp(QWidget):
             self.logout()
 
     def show_admin_controls(self):
-        '''
-        Affichage de l'interface 'Admin' losqu'il se connecte
-        '''
+        """Affiche l'interface d'administration lorsque l'administrateur se connecte.
+
+        :return: Aucun
+        :rtype: None
+        :raises: Aucune
+
+        :example:
+
+        .. code-block:: python
+
+            instance.show_admin_controls()
+        """
         self.username_label.setText("Connecté en tant qu'Admin")
         self.login_button.setText('Déconnexion')
         self.create_account_button.setVisible(False)
         self.manage_database_button.setVisible(True)
 
     def manage_database(self):
-        '''
-        Lancer la gestion d'admin
-        '''
-        subprocess.run(['python3', '/home/etudiant/Documents/SAE_Prog/SalleConcert/SalleConcert/gestion_graphique/main.py'])
+        """Lance l'interface de gestion de la base de données pour l'administrateur.
+
+        :return: Aucun
+        :rtype: None
+        :raises: Aucune
+
+        :example:
+
+        .. code-block:: python
+
+            instance.manage_database()
+        """
+        subprocess.run(['python3', '/home/etudiant/SAE_Prog/SalleConcert/SalleConcert/gestion_graphique/main.py'])
 
     def launch_create_account_script(self):
-        '''
-        Lancer le script de création de compte
-        '''
-        subprocess.run(['python3', '/home/etudiant/Documents/SAE_Prog/SalleConcert/SalleConcert/application/creation_compte.py'])
+        """Lance l'interface de création de compte dans la base de données.
 
+        :return: Aucun
+        :rtype: None
+        :raises: Aucune
+
+        :example:
+
+        .. code-block:: python
+
+            instance.manage_database()
+        """
+        subprocess.run(['python3', '/home/etudiant/SAE_Prog/SalleConcert/SalleConcert/application/creation_compte.py'])
 
     def logout(self):
-        '''
-        Permet la déconnexion d'un utilisateur lorsque ce derniers est connecté
-        '''
+        """Permet la déconnexion d'un utilisateur lorsqu'il est connecté.
+
+        :return: Aucun
+        :rtype: None
+        :raises: Aucune
+
+        :example:
+
+        .. code-block:: python
+
+            instance.logout()
+        """
         self.username_label.clear()
         self.login_button.setText('Se connecter')
         self.create_account_button.setVisible(True)
         self.manage_database_button.setVisible(False)
 
     def handle_concert_click(self, concert_name):
-        '''
-        Fonction appelée lorsqu'un bouton de concert est cliqué
-        '''
+        """Fonction appelée lorsqu'un bouton de concert est cliqué.
+
+        :param concert_name: Le nom du concert cliqué.
+        :type concert_name: str
+        :return: Aucun
+        :rtype: None
+        :raises: Aucune
+
+        :example:
+
+        .. code-block:: python
+
+            instance.handle_concert_click("Nom du concert")
+        """
         if self.login_button.text() == 'Déconnexion':
             print(f"Concert {concert_name} is clicked by {self.current_user}.")
         else:
