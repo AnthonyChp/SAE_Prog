@@ -1,7 +1,33 @@
+"""
+.. module:: gestion_graphique
+   :platform: Unix, windows
+   :synopsis: classe pour ajouter des concerts dans la base de données
+
+.. moduleauthor:: Bauwens Matthieu <matthieu.bauwens@etu.univ-poitiers.fr>
+
+
+"""
+
 from PyQt5.QtWidgets import QLabel, QDialog, QGridLayout, QPushButton, QLineEdit, QMessageBox, QDateEdit
 
 class AjoutConcerts(QDialog):
+
+    """
+    classe AjoutConcerts qui permet d'ajouter des concerts dans la base de données.
+
+    :param donnees_concerts: l'objet gérant l'accès à la base de données des concerts.
+    :type donnees_concerts: DatabaseManager
+    """
+    
     def __init__(self, donnees_concerts):
+
+        """
+        initialise une nouvelle instance de la classe AjoutConcerts.
+
+        :param donnees_concerts: l'objet gérant l'accès à la base de données des concerts.
+        :type donnees_concerts: DatabaseManager
+        """
+
         super().__init__()
 
         self.donnees_concerts = donnees_concerts
@@ -10,17 +36,17 @@ class AjoutConcerts(QDialog):
         self.resize(500, 350)
 
         self.titre_label = QLabel('Titre :')
-        self.titre_edit = QLineEdit() 
+        self.titre_edit = QLineEdit()
 
         self.artiste_label = QLabel('Artiste :')
-        self.artiste_edit = QLineEdit() 
+        self.artiste_edit = QLineEdit()
 
         self.date_label = QLabel('Date :')
         self.date_edit = QDateEdit()
         self.date_edit.setCalendarPopup(True)
 
         self.tarif_label = QLabel('Tarif :')
-        self.tarif_edit = QLineEdit() 
+        self.tarif_edit = QLineEdit()
 
         layout = QGridLayout()
 
@@ -45,6 +71,14 @@ class AjoutConcerts(QDialog):
 
 
     def ajouter_concert(self):
+
+        """
+        Fonction appelée lorsqu'on clique sur le bouton d'ajout de concert.
+
+        Récupère les valeurs des champs de saisie, valide les champs, construit la requête SQL d'insertion,
+        et exécute la requête dans la base de données.
+        """
+
         titre = self.titre_edit.text()
         artiste = self.artiste_edit.text()
         date = self.date_edit.date()

@@ -1,3 +1,13 @@
+"""
+.. module:: gestion_graphique
+   :platform: Unix, windows
+   :synopsis: fenetre principale qui réunit les différents bout de code pour former l'application
+
+.. moduleauthor:: Bauwens Matthieu <matthieu.bauwens@etu.univ-poitiers.fr>
+
+
+"""
+
 from PyQt5.QtWidgets import QMainWindow, QWidget, QDialog, QMessageBox, QVBoxLayout, QTabWidget, QPushButton, QTableWidget, QTableWidgetItem
 
 import bcrypt
@@ -11,7 +21,31 @@ from ajout_concerts import AjoutConcerts
 
 
 class AppGestion(QMainWindow):
+
+    """
+    La classe AppGestion représente la fenêtre principale de l'application.
+
+    Cette fenêtre contient deux onglets, un pour la table des spectateurs et un pour la table des concerts.
+    Chaque onglet comprend une table affichant les données de la table respective, ainsi que des boutons pour rafraîchir,
+    ajouter, modifier et supprimer des entrées.
+
+    :ivar donnees_spectateurs: L'objet gérant l'accès à la base de données des spectateurs.
+    :vartype donnees_spectateurs: DataSpectateurs
+    :ivar donnees_concerts: L'objet gérant l'accès à la base de données des concerts.
+    :vartype donnees_concerts: DataConcerts
+    """
+
     def __init__(self, donnees_spectateurs , donnees_concerts):
+
+        """
+        Initialise une nouvelle instance de la classe AppGestion.
+
+        :param donnees_spectateurs: L'objet gérant l'accès à la base de données des spectateurs.
+        :type donnees_spectateurs: DataSpectateurs
+        :param donnees_concerts: L'objet gérant l'accès à la base de données des concerts.
+        :type donnees_concerts: DataConcerts
+        """
+
         super().__init__()
         self.donnees_spectateurs = donnees_spectateurs
         self.donnees_concerts = donnees_concerts
@@ -74,6 +108,11 @@ class AppGestion(QMainWindow):
 
 
     def refresh_donnees_spectateurs(self):
+        
+        """
+        Rafraîchit la table des spectateurs en récupérant les données de la base de données.
+        """
+
         # Fetch data from the database
         query = "SELECT * FROM spectateurs"
         data = self.donnees_spectateurs.recup_donnees_spectateurs(query)
@@ -91,12 +130,21 @@ class AppGestion(QMainWindow):
 
     def ajout_spectateurs(self):
 
+        """
+        Ouvre une boîte de dialogue pour ajouter un nouveau spectateur à la base de données.
+        """
+
         AjoutSpectateurs(self.donnees_spectateurs).exec_()
 
         self.refresh_donnees_spectateurs()
 
 
     def modif_donnees_spectateurs(self):
+
+        """
+        Ouvre une boîte de dialogue pour modifier les données d'un spectateur sélectionné dans la table.
+        """
+
         selected_row = self.table_spectateurs.currentRow()
         if selected_row != -1:
             data_to_edit = [self.table_spectateurs.item(selected_row, col).text() for col in range(self.table_spectateurs.columnCount())]
@@ -104,6 +152,11 @@ class AppGestion(QMainWindow):
             self.refresh_donnees_spectateurs()
 
     def supp_spectateurs(self):
+
+        """
+        Supprime un spectateur sélectionné dans la table après confirmation de l'utilisateur.
+        """
+        
         selected_row = self.table_spectateurs.currentRow()
         if selected_row != -1:
             confirmation = QMessageBox.question(self, 'Suppression', 'Êtes-vous sûr de vouloir supprimer cette ligne ?', 
@@ -125,6 +178,11 @@ class AppGestion(QMainWindow):
 
 
     def refresh_donnees_concerts(self):
+
+        """
+        Rafraîchit la table des concerts en récupérant les données de la base de données.
+        """
+
         # Fetch data from the database
         query = "SELECT * FROM concerts"
         data = self.donnees_concerts.recup_donnees_concerts(query)
@@ -141,6 +199,9 @@ class AppGestion(QMainWindow):
 
     def ajout_concerts(self):
 
+        """
+        Ouvre une boîte de dialogue pour ajouter un nouveau concert à la base de données.
+        """
 
         AjoutConcerts(self.donnees_concerts).exec_()
 
@@ -148,6 +209,11 @@ class AppGestion(QMainWindow):
 
 
     def modif_donnees_concerts(self):
+
+        """
+        Ouvre une boîte de dialogue pour modifier les données d'un concert sélectionné dans la table.
+        """
+
         selected_row = self.table_concerts.currentRow()
         if selected_row != -1:
             data_to_edit = [self.table_concerts.item(selected_row, col).text() for col in range(self.table_concerts.columnCount())]
@@ -155,6 +221,11 @@ class AppGestion(QMainWindow):
             self.refresh_donnees_concerts()
 
     def supp_concerts(self):
+
+        """
+        Supprime un concert sélectionné dans la table après confirmation de l'utilisateur.
+        """
+        
         selected_row = self.table_concerts.currentRow()
         if selected_row != -1:
             confirmation = QMessageBox.question(self, 'Suppression', 'Êtes-vous sûr de vouloir supprimer cette ligne ?', 

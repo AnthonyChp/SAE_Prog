@@ -1,8 +1,39 @@
-from PyQt5.QtWidgets import QLabel, QDialog, QVBoxLayout, QPushButton, QLineEdit, QMessageBox, QGridLayout
+"""
+.. module:: gestion_graphique
+   :platform: Unix, windows
+   :synopsis: classe pour assurer la modification des spectateurs dans la base de données
+
+.. moduleauthor:: Bauwens Matthieu <matthieu.bauwens@etu.univ-poitiers.fr>
+
+
+"""
+
+from PyQt5.QtWidgets import QLabel, QDialog, QPushButton, QLineEdit, QMessageBox, QGridLayout
 import bcrypt
 
 class ModifSpectateurs(QDialog):
+
+    """
+    classe ModifSpectateurs qui permet de modifier des spectateurs dans la base de données
+
+    :param data_to_edit: les données du spectateur à éditer.
+    :type data_to_edit: tuple
+    :param donnees_spectateurs: l'objet gérant l'accès à la base de données des spectateurs.
+    :type donnees_spectateurs: DatabaseManager
+    
+    """
+        
     def __init__(self, data_to_edit, donnees_spectateurs):
+
+        """
+        initialise une nouvelle instance de la classe ModifSpectateurs.
+
+        :param data_to_edit: les données du spectateur à éditer.
+        :type data_to_edit: tuple
+        :param donnees_spectateurs: l'objet gérant l'accès à la base de données des spectateurs.
+        :type donnees_spectateurs: DatabaseManager
+        """
+        
         super().__init__()
         self.donnees_spectateurs = donnees_spectateurs
         self.data_to_edit = data_to_edit
@@ -69,6 +100,14 @@ class ModifSpectateurs(QDialog):
         self.setLayout(layout)
 
     def modifier_spectateurs(self):
+
+        """
+        Fonction appelée lorsqu'on clique sur le bouton de modification.
+
+        Elle récupère les valeurs des champs de saisie, valide les champs, effectue le hachage du mot de passe,
+        construit la requête UPDATE puis exécute la requête.
+        """
+
         # Récupérer les valeurs des champs de saisie
         nom = self.nom_edit.text()
         prenom = self.prenom_edit.text()

@@ -1,8 +1,39 @@
+"""
+.. module:: gestion_graphique
+   :platform: Unix, windows
+   :synopsis: classe pour modifier des concerts dans la base de données
+
+.. moduleauthor:: Bauwens Matthieu <matthieu.bauwens@etu.univ-poitiers.fr>
+
+
+"""
+
 from PyQt5.QtWidgets import QLabel, QDialog, QGridLayout, QPushButton, QLineEdit, QMessageBox, QDateEdit
 from PyQt5.QtCore import QDate
 
 class ModifConcerts(QDialog):
+
+    """
+    classe ModifConcerts qui permet de modifier des concerts dans la base de données
+
+    :param data_to_edit: les données du spectateur à éditer.
+    :type data_to_edit: tuple
+    :param donnees_concerts: l'objet gérant l'accès à la base de données des spectateurs.
+    :type donnees_concerts: DatabaseManager
+    
+    """
+
     def __init__(self, data_to_edit, donnees_concerts):
+
+        """
+        initialise une nouvelle instance de la classe ModifConcerts.
+
+        :param data_to_edit: les données du concert à éditer.
+        :type data_to_edit: tuple
+        :param donnees_concerts: l'objet gérant l'accès à la base de données des spectateurs.
+        :type donnees_concerts: DatabaseManager
+        """
+
         super().__init__()
 
         self.donnees_concerts = donnees_concerts
@@ -47,6 +78,14 @@ class ModifConcerts(QDialog):
 
 
     def modif_concerts(self):
+
+        """
+        Fonction appelée lorsqu'on clique sur le bouton de modification.
+
+        Elle récupère les valeurs des champs de saisie, valide les champs, construit la requête SQL d'insertion,
+        et exécute la requête dans la base de données.
+        """
+
         titre = self.titre_edit.text()
         artiste = self.artiste_edit.text()
         date = self.date_edit.date()

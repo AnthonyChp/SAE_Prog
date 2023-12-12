@@ -1,3 +1,13 @@
+"""
+.. module:: gestion_graphique
+   :platform: Unix, windows
+   :synopsis: fonction main pour démarrer l'appli de gestion graphique de base de données
+
+.. moduleauthor:: Bauwens Matthieu <matthieu.bauwens@etu.univ-poitiers.fr>
+
+
+"""
+
 import sys
 from PyQt5.QtWidgets import QApplication
 

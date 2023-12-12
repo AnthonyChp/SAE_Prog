@@ -1,8 +1,34 @@
+"""
+.. module:: gestion_graphique
+   :platform: Unix, windows
+   :synopsis: classe pour ajouter des spectateurs dans la base de données
+
+.. moduleauthor:: Bauwens Matthieu <matthieu.bauwens@etu.univ-poitiers.fr>
+
+
+"""
+
 from PyQt5.QtWidgets import QLabel, QDialog, QGridLayout, QPushButton, QLineEdit, QMessageBox
 import bcrypt
 
 class AjoutSpectateurs(QDialog):
+
+    """
+    classe AjoutSpectateurs qui permet d'ajouter des spectateurs dans la base de données.
+
+    :param donnees_spectateurs: l'objet gérant l'accès à la base de données des concerts.
+    :type donnees_spectateurs: DatabaseManager
+    """
+
     def __init__(self, donnees_spectateurs):
+
+        """
+        initialise une nouvelle instance de la classe AjoutSpectateurs.
+
+        :param donnees_spectateurs: l'objet gérant l'accès à la base de données des concerts.
+        :type donnees_spectateurs: DatabaseManager
+        """
+
         super().__init__()
 
         self.donnees_spectateurs = donnees_spectateurs
@@ -71,6 +97,14 @@ class AjoutSpectateurs(QDialog):
 
 
     def ajouter_spectateur(self):
+
+        """
+        Fonction appelée lorsqu'on clique sur le bouton d'ajout de spectateurs.
+
+        Récupère les valeurs des champs de saisie, valide les champs,  effectue le hachage du mot de passe,
+        construit la requête UPDATE puis exécute la requête.
+        """
+
         # Récupérer les valeurs des champs de saisie
         nom = self.nom_edit.text()
         prenom = self.prenom_edit.text()
