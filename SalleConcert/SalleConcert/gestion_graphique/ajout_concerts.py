@@ -1,5 +1,5 @@
 """
-.. module:: gestion_graphique
+.. module:: ajout_concerts
    :platform: Unix, windows
    :synopsis: classe pour ajouter des concerts dans la base de données
 

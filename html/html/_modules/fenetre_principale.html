@@ -1,0 +1,354 @@
+<!DOCTYPE html>
+<html class="writer-html5" lang="fr" >
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>fenetre_principale &mdash; Documentation SalleConcert </title>
+      <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
+      <link rel="stylesheet" href="../_static/css/theme.css" type="text/css" />
+  
+        <script data-url_root="../" id="documentation_options" src="../_static/documentation_options.js"></script>
+        <script src="../_static/jquery.js"></script>
+        <script src="../_static/underscore.js"></script>
+        <script src="../_static/_sphinx_javascript_frameworks_compat.js"></script>
+        <script src="../_static/doctools.js"></script>
+        <script src="../_static/sphinx_highlight.js"></script>
+        <script src="../_static/translations.js"></script>
+    <script src="../_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Recherche" href="../search.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+          
+          
+          <a href="../index.html" class="icon icon-home">
+            SalleConcert
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../search.html" method="get">
+    <input type="text" name="q" placeholder="Rechercher docs" aria-label="Rechercher docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <p class="caption" role="heading"><span class="caption-text">Contenu:</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../content/code.html">Documentation du code</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Application principale</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../content/code_application.html">Documentation du code de l’application principale</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Application de gestion graphique</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../content/code_gestion_graphique.html">Documentation du code de l’application de gestion graphique</a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../index.html">SalleConcert</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="../index.html" class="icon icon-home" aria-label="Home"></a></li>
+          <li class="breadcrumb-item"><a href="index.html">Code du module</a></li>
+      <li class="breadcrumb-item active">fenetre_principale</li>
+      <li class="wy-breadcrumbs-aside">
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <h1>Code source de fenetre_principale</h1><div class="highlight"><pre>
+<span></span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">.. module:: fenetre_principale</span>
+<span class="sd">   :platform: Unix, windows</span>
+<span class="sd">   :synopsis: fenetre principale qui réunit les différents bout de code pour former l&#39;application</span>
+
+<span class="sd">.. moduleauthor:: Bauwens Matthieu &lt;matthieu.bauwens@etu.univ-poitiers.fr&gt;</span>
+
+
+<span class="sd">&quot;&quot;&quot;</span>
+
+<span class="kn">from</span> <span class="nn">PyQt5.QtWidgets</span> <span class="kn">import</span> <span class="n">QMainWindow</span><span class="p">,</span> <span class="n">QWidget</span><span class="p">,</span> <span class="n">QMessageBox</span><span class="p">,</span> <span class="n">QVBoxLayout</span><span class="p">,</span> <span class="n">QTabWidget</span><span class="p">,</span> <span class="n">QPushButton</span><span class="p">,</span> <span class="n">QTableWidget</span><span class="p">,</span> <span class="n">QTableWidgetItem</span>
+
+<span class="kn">from</span> <span class="nn">modif_spectateurs</span> <span class="kn">import</span> <span class="n">ModifSpectateurs</span>
+<span class="kn">from</span> <span class="nn">modif_concerts</span> <span class="kn">import</span> <span class="n">ModifConcerts</span>
+<span class="kn">from</span> <span class="nn">recup_spectateurs</span> <span class="kn">import</span> <span class="n">DataSpectateurs</span>
+<span class="kn">from</span> <span class="nn">recup_concerts</span> <span class="kn">import</span> <span class="n">DataConcerts</span>
+<span class="kn">from</span> <span class="nn">ajout_spectateurs</span> <span class="kn">import</span> <span class="n">AjoutSpectateurs</span>
+<span class="kn">from</span> <span class="nn">ajout_concerts</span> <span class="kn">import</span> <span class="n">AjoutConcerts</span>
+
+
+<div class="viewcode-block" id="AppGestion"><a class="viewcode-back" href="../content/code_gestion_graphique.html#fenetre_principale.AppGestion">[docs]</a><span class="k">class</span> <span class="nc">AppGestion</span><span class="p">(</span><span class="n">QMainWindow</span><span class="p">):</span>
+
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    La classe AppGestion représente la fenêtre principale de l&#39;application.</span>
+
+<span class="sd">    Cette fenêtre contient deux onglets, un pour la table des spectateurs et un pour la table des concerts.</span>
+<span class="sd">    Chaque onglet comprend une table affichant les données de la table respective, ainsi que des boutons pour rafraîchir,</span>
+<span class="sd">    ajouter, modifier et supprimer des entrées.</span>
+
+<span class="sd">    :ivar donnees_spectateurs: L&#39;objet gérant l&#39;accès à la base de données des spectateurs.</span>
+<span class="sd">    :vartype donnees_spectateurs: DataSpectateurs</span>
+<span class="sd">    :ivar donnees_concerts: L&#39;objet gérant l&#39;accès à la base de données des concerts.</span>
+<span class="sd">    :vartype donnees_concerts: DataConcerts</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">donnees_spectateurs</span> <span class="p">,</span> <span class="n">donnees_concerts</span><span class="p">):</span>
+
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Initialise une nouvelle instance de la classe AppGestion.</span>
+
+<span class="sd">        :param donnees_spectateurs: L&#39;objet gérant l&#39;accès à la base de données des spectateurs.</span>
+<span class="sd">        :type donnees_spectateurs: DataSpectateurs</span>
+<span class="sd">        :param donnees_concerts: L&#39;objet gérant l&#39;accès à la base de données des concerts.</span>
+<span class="sd">        :type donnees_concerts: DataConcerts</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+
+        <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">()</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">donnees_spectateurs</span> <span class="o">=</span> <span class="n">donnees_spectateurs</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">donnees_concerts</span> <span class="o">=</span> <span class="n">donnees_concerts</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">setWindowTitle</span><span class="p">(</span><span class="s1">&#39;Gestion graphique de la base de données salle_concert&#39;</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">resize</span><span class="p">(</span><span class="mi">800</span><span class="p">,</span> <span class="mi">600</span><span class="p">)</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">central_widget</span> <span class="o">=</span> <span class="n">QWidget</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">setCentralWidget</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">central_widget</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">layout</span> <span class="o">=</span> <span class="n">QVBoxLayout</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">central_widget</span><span class="p">)</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">onglets</span> <span class="o">=</span> <span class="n">QTabWidget</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">layout</span><span class="o">.</span><span class="n">addWidget</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">onglets</span><span class="p">)</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">onglet1</span> <span class="o">=</span> <span class="n">QWidget</span><span class="p">()</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">onglets</span><span class="o">.</span><span class="n">addTab</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">onglet1</span><span class="p">,</span> <span class="s2">&quot;Table Spectateurs&quot;</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">onglet1_layout</span> <span class="o">=</span> <span class="n">QVBoxLayout</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">onglet1</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">table_spectateurs</span> <span class="o">=</span> <span class="n">QTableWidget</span><span class="p">()</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">onglet1_layout</span><span class="o">.</span><span class="n">addWidget</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">table_spectateurs</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">bouton_refresh_spectateurs</span> <span class="o">=</span> <span class="n">QPushButton</span><span class="p">(</span><span class="s2">&quot;Rafraîchir&quot;</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">bouton_ajout_spectateurs</span> <span class="o">=</span> <span class="n">QPushButton</span><span class="p">(</span><span class="s2">&quot;Ajouter un spectateur&quot;</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">bouton_modif_spectateurs</span> <span class="o">=</span> <span class="n">QPushButton</span><span class="p">(</span><span class="s2">&quot;Modifier la ligne&quot;</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">bouton_supp_spectateurs</span> <span class="o">=</span> <span class="n">QPushButton</span><span class="p">(</span><span class="s2">&quot;Supprimer la ligne&quot;</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">onglet1_layout</span><span class="o">.</span><span class="n">addWidget</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">bouton_refresh_spectateurs</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">onglet1_layout</span><span class="o">.</span><span class="n">addWidget</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">bouton_ajout_spectateurs</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">onglet1_layout</span><span class="o">.</span><span class="n">addWidget</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">bouton_modif_spectateurs</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">onglet1_layout</span><span class="o">.</span><span class="n">addWidget</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">bouton_supp_spectateurs</span><span class="p">)</span>
+
+
+        <span class="c1"># Ajouter le deuxième onglet</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">onglet2</span> <span class="o">=</span> <span class="n">QWidget</span><span class="p">()</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">onglets</span><span class="o">.</span><span class="n">addTab</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">onglet2</span><span class="p">,</span> <span class="s2">&quot;Table Concerts&quot;</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">onglet2_layout</span> <span class="o">=</span> <span class="n">QVBoxLayout</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">onglet2</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">table_concerts</span> <span class="o">=</span> <span class="n">QTableWidget</span><span class="p">()</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">onglet2_layout</span><span class="o">.</span><span class="n">addWidget</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">table_concerts</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">bouton_refresh_concerts</span> <span class="o">=</span> <span class="n">QPushButton</span><span class="p">(</span><span class="s2">&quot;Rafraîchir&quot;</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">bouton_ajout_concerts</span> <span class="o">=</span> <span class="n">QPushButton</span><span class="p">(</span><span class="s2">&quot;Ajouter un concert&quot;</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">bouton_modif_concerts</span> <span class="o">=</span> <span class="n">QPushButton</span><span class="p">(</span><span class="s2">&quot;Modifier la ligne&quot;</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">bouton_supp_concerts</span> <span class="o">=</span> <span class="n">QPushButton</span><span class="p">(</span><span class="s2">&quot;Supprimer la ligne&quot;</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">onglet2_layout</span><span class="o">.</span><span class="n">addWidget</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">bouton_refresh_concerts</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">onglet2_layout</span><span class="o">.</span><span class="n">addWidget</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">bouton_ajout_concerts</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">onglet2_layout</span><span class="o">.</span><span class="n">addWidget</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">bouton_modif_concerts</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">onglet2_layout</span><span class="o">.</span><span class="n">addWidget</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">bouton_supp_concerts</span><span class="p">)</span>
+
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">bouton_refresh_spectateurs</span><span class="o">.</span><span class="n">clicked</span><span class="o">.</span><span class="n">connect</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">refresh_donnees_spectateurs</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">bouton_ajout_spectateurs</span><span class="o">.</span><span class="n">clicked</span><span class="o">.</span><span class="n">connect</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">ajout_spectateurs</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">bouton_modif_spectateurs</span><span class="o">.</span><span class="n">clicked</span><span class="o">.</span><span class="n">connect</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">modif_donnees_spectateurs</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">bouton_supp_spectateurs</span><span class="o">.</span><span class="n">clicked</span><span class="o">.</span><span class="n">connect</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">supp_spectateurs</span><span class="p">)</span>
+
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">bouton_refresh_concerts</span><span class="o">.</span><span class="n">clicked</span><span class="o">.</span><span class="n">connect</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">refresh_donnees_concerts</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">bouton_ajout_concerts</span><span class="o">.</span><span class="n">clicked</span><span class="o">.</span><span class="n">connect</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">ajout_concerts</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">bouton_modif_concerts</span><span class="o">.</span><span class="n">clicked</span><span class="o">.</span><span class="n">connect</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">modif_donnees_concerts</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">bouton_supp_concerts</span><span class="o">.</span><span class="n">clicked</span><span class="o">.</span><span class="n">connect</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">supp_concerts</span><span class="p">)</span>
+
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">refresh_donnees_spectateurs</span><span class="p">()</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">refresh_donnees_concerts</span><span class="p">()</span>
+
+
+<div class="viewcode-block" id="AppGestion.refresh_donnees_spectateurs"><a class="viewcode-back" href="../content/code_gestion_graphique.html#fenetre_principale.AppGestion.refresh_donnees_spectateurs">[docs]</a>    <span class="k">def</span> <span class="nf">refresh_donnees_spectateurs</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<span class="w">        </span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Rafraîchit la table des spectateurs en récupérant les données de la base de données.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+
+        <span class="c1"># Fetch data from the database</span>
+        <span class="n">query</span> <span class="o">=</span> <span class="s2">&quot;SELECT * FROM spectateurs&quot;</span>
+        <span class="n">data</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">donnees_spectateurs</span><span class="o">.</span><span class="n">recup_donnees_spectateurs</span><span class="p">(</span><span class="n">query</span><span class="p">)</span>
+
+        <span class="c1"># Populate the table with the fetched data</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">table_spectateurs</span><span class="o">.</span><span class="n">setRowCount</span><span class="p">(</span><span class="mi">0</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">table_spectateurs</span><span class="o">.</span><span class="n">setColumnCount</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">data</span><span class="p">[</span><span class="mi">0</span><span class="p">]))</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">table_spectateurs</span><span class="o">.</span><span class="n">setHorizontalHeaderLabels</span><span class="p">([</span><span class="nb">str</span><span class="p">(</span><span class="n">header</span><span class="p">[</span><span class="mi">0</span><span class="p">])</span> <span class="k">for</span> <span class="n">header</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">donnees_spectateurs</span><span class="o">.</span><span class="n">cursor</span><span class="o">.</span><span class="n">description</span><span class="p">])</span>
+
+        <span class="k">for</span> <span class="n">row_number</span><span class="p">,</span> <span class="n">row_data</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">data</span><span class="p">):</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">table_spectateurs</span><span class="o">.</span><span class="n">insertRow</span><span class="p">(</span><span class="n">row_number</span><span class="p">)</span>
+            <span class="k">for</span> <span class="n">column_number</span><span class="p">,</span> <span class="n">column_data</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">row_data</span><span class="p">):</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">table_spectateurs</span><span class="o">.</span><span class="n">setItem</span><span class="p">(</span><span class="n">row_number</span><span class="p">,</span> <span class="n">column_number</span><span class="p">,</span> <span class="n">QTableWidgetItem</span><span class="p">(</span><span class="nb">str</span><span class="p">(</span><span class="n">column_data</span><span class="p">)))</span></div>
+
+
+<div class="viewcode-block" id="AppGestion.ajout_spectateurs"><a class="viewcode-back" href="../content/code_gestion_graphique.html#fenetre_principale.AppGestion.ajout_spectateurs">[docs]</a>    <span class="k">def</span> <span class="nf">ajout_spectateurs</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Ouvre une boîte de dialogue pour ajouter un nouveau spectateur à la base de données.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+
+        <span class="n">AjoutSpectateurs</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">donnees_spectateurs</span><span class="p">)</span><span class="o">.</span><span class="n">exec_</span><span class="p">()</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">refresh_donnees_spectateurs</span><span class="p">()</span></div>
+
+
+<div class="viewcode-block" id="AppGestion.modif_donnees_spectateurs"><a class="viewcode-back" href="../content/code_gestion_graphique.html#fenetre_principale.AppGestion.modif_donnees_spectateurs">[docs]</a>    <span class="k">def</span> <span class="nf">modif_donnees_spectateurs</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Ouvre une boîte de dialogue pour modifier les données d&#39;un spectateur sélectionné dans la table.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+
+        <span class="n">selected_row</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">table_spectateurs</span><span class="o">.</span><span class="n">currentRow</span><span class="p">()</span>
+        <span class="k">if</span> <span class="n">selected_row</span> <span class="o">!=</span> <span class="o">-</span><span class="mi">1</span><span class="p">:</span>
+            <span class="n">data_to_edit</span> <span class="o">=</span> <span class="p">[</span><span class="bp">self</span><span class="o">.</span><span class="n">table_spectateurs</span><span class="o">.</span><span class="n">item</span><span class="p">(</span><span class="n">selected_row</span><span class="p">,</span> <span class="n">col</span><span class="p">)</span><span class="o">.</span><span class="n">text</span><span class="p">()</span> <span class="k">for</span> <span class="n">col</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">table_spectateurs</span><span class="o">.</span><span class="n">columnCount</span><span class="p">())]</span>
+            <span class="n">ModifSpectateurs</span><span class="p">(</span><span class="n">data_to_edit</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">donnees_spectateurs</span><span class="p">)</span><span class="o">.</span><span class="n">exec_</span><span class="p">()</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">refresh_donnees_spectateurs</span><span class="p">()</span></div>
+
+<div class="viewcode-block" id="AppGestion.supp_spectateurs"><a class="viewcode-back" href="../content/code_gestion_graphique.html#fenetre_principale.AppGestion.supp_spectateurs">[docs]</a>    <span class="k">def</span> <span class="nf">supp_spectateurs</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Supprime un spectateur sélectionné dans la table après confirmation de l&#39;utilisateur.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        
+        <span class="n">selected_row</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">table_spectateurs</span><span class="o">.</span><span class="n">currentRow</span><span class="p">()</span>
+        <span class="k">if</span> <span class="n">selected_row</span> <span class="o">!=</span> <span class="o">-</span><span class="mi">1</span><span class="p">:</span>
+            <span class="n">confirmation</span> <span class="o">=</span> <span class="n">QMessageBox</span><span class="o">.</span><span class="n">question</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="s1">&#39;Suppression&#39;</span><span class="p">,</span> <span class="s1">&#39;Êtes-vous sûr de vouloir supprimer cette ligne ?&#39;</span><span class="p">,</span> 
+                                               <span class="n">QMessageBox</span><span class="o">.</span><span class="n">Yes</span> <span class="o">|</span> <span class="n">QMessageBox</span><span class="o">.</span><span class="n">No</span><span class="p">)</span>
+
+            <span class="k">if</span> <span class="n">confirmation</span> <span class="o">==</span> <span class="n">QMessageBox</span><span class="o">.</span><span class="n">Yes</span><span class="p">:</span>
+
+                                <span class="c1"># Récupérer l&#39;ID de la ligne sélectionnée</span>
+                <span class="n">id_a_supprimer</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">table_spectateurs</span><span class="o">.</span><span class="n">item</span><span class="p">(</span><span class="n">selected_row</span><span class="p">,</span> <span class="mi">0</span><span class="p">)</span><span class="o">.</span><span class="n">text</span><span class="p">()</span>
+
+                <span class="c1"># Construire la requête DELETE</span>
+                <span class="n">delete_query</span> <span class="o">=</span> <span class="s2">&quot;DELETE FROM spectateurs WHERE ID = </span><span class="si">%s</span><span class="s2">&quot;</span>
+
+                <span class="bp">self</span><span class="o">.</span><span class="n">donnees_spectateurs</span><span class="o">.</span><span class="n">execute_spectateurs_query</span><span class="p">(</span><span class="n">delete_query</span><span class="p">,</span> <span class="p">(</span><span class="n">id_a_supprimer</span><span class="p">,))</span>
+
+
+                <span class="bp">self</span><span class="o">.</span><span class="n">table_spectateurs</span><span class="o">.</span><span class="n">removeRow</span><span class="p">(</span><span class="n">selected_row</span><span class="p">)</span></div>
+
+
+
+<div class="viewcode-block" id="AppGestion.refresh_donnees_concerts"><a class="viewcode-back" href="../content/code_gestion_graphique.html#fenetre_principale.AppGestion.refresh_donnees_concerts">[docs]</a>    <span class="k">def</span> <span class="nf">refresh_donnees_concerts</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Rafraîchit la table des concerts en récupérant les données de la base de données.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+
+        <span class="c1"># Fetch data from the database</span>
+        <span class="n">query</span> <span class="o">=</span> <span class="s2">&quot;SELECT * FROM concerts&quot;</span>
+        <span class="n">data</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">donnees_concerts</span><span class="o">.</span><span class="n">recup_donnees_concerts</span><span class="p">(</span><span class="n">query</span><span class="p">)</span>
+
+        <span class="c1"># Populate the table with the fetched data</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">table_concerts</span><span class="o">.</span><span class="n">setRowCount</span><span class="p">(</span><span class="mi">0</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">table_concerts</span><span class="o">.</span><span class="n">setColumnCount</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">data</span><span class="p">[</span><span class="mi">0</span><span class="p">]))</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">table_concerts</span><span class="o">.</span><span class="n">setHorizontalHeaderLabels</span><span class="p">([</span><span class="nb">str</span><span class="p">(</span><span class="n">header</span><span class="p">[</span><span class="mi">0</span><span class="p">])</span> <span class="k">for</span> <span class="n">header</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">donnees_concerts</span><span class="o">.</span><span class="n">cursor</span><span class="o">.</span><span class="n">description</span><span class="p">])</span>
+
+        <span class="k">for</span> <span class="n">row_number</span><span class="p">,</span> <span class="n">row_data</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">data</span><span class="p">):</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">table_concerts</span><span class="o">.</span><span class="n">insertRow</span><span class="p">(</span><span class="n">row_number</span><span class="p">)</span>
+            <span class="k">for</span> <span class="n">column_number</span><span class="p">,</span> <span class="n">column_data</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">row_data</span><span class="p">):</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">table_concerts</span><span class="o">.</span><span class="n">setItem</span><span class="p">(</span><span class="n">row_number</span><span class="p">,</span> <span class="n">column_number</span><span class="p">,</span> <span class="n">QTableWidgetItem</span><span class="p">(</span><span class="nb">str</span><span class="p">(</span><span class="n">column_data</span><span class="p">)))</span></div>
+
+<div class="viewcode-block" id="AppGestion.ajout_concerts"><a class="viewcode-back" href="../content/code_gestion_graphique.html#fenetre_principale.AppGestion.ajout_concerts">[docs]</a>    <span class="k">def</span> <span class="nf">ajout_concerts</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Ouvre une boîte de dialogue pour ajouter un nouveau concert à la base de données.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+
+        <span class="n">AjoutConcerts</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">donnees_concerts</span><span class="p">)</span><span class="o">.</span><span class="n">exec_</span><span class="p">()</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">refresh_donnees_concerts</span><span class="p">()</span></div>
+
+
+<div class="viewcode-block" id="AppGestion.modif_donnees_concerts"><a class="viewcode-back" href="../content/code_gestion_graphique.html#fenetre_principale.AppGestion.modif_donnees_concerts">[docs]</a>    <span class="k">def</span> <span class="nf">modif_donnees_concerts</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Ouvre une boîte de dialogue pour modifier les données d&#39;un concert sélectionné dans la table.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+
+        <span class="n">selected_row</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">table_concerts</span><span class="o">.</span><span class="n">currentRow</span><span class="p">()</span>
+        <span class="k">if</span> <span class="n">selected_row</span> <span class="o">!=</span> <span class="o">-</span><span class="mi">1</span><span class="p">:</span>
+            <span class="n">data_to_edit</span> <span class="o">=</span> <span class="p">[</span><span class="bp">self</span><span class="o">.</span><span class="n">table_concerts</span><span class="o">.</span><span class="n">item</span><span class="p">(</span><span class="n">selected_row</span><span class="p">,</span> <span class="n">col</span><span class="p">)</span><span class="o">.</span><span class="n">text</span><span class="p">()</span> <span class="k">for</span> <span class="n">col</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">table_concerts</span><span class="o">.</span><span class="n">columnCount</span><span class="p">())]</span>
+            <span class="n">ModifConcerts</span><span class="p">(</span><span class="n">data_to_edit</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">donnees_concerts</span><span class="p">)</span><span class="o">.</span><span class="n">exec_</span><span class="p">()</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">refresh_donnees_concerts</span><span class="p">()</span></div>
+
+<div class="viewcode-block" id="AppGestion.supp_concerts"><a class="viewcode-back" href="../content/code_gestion_graphique.html#fenetre_principale.AppGestion.supp_concerts">[docs]</a>    <span class="k">def</span> <span class="nf">supp_concerts</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Supprime un concert sélectionné dans la table après confirmation de l&#39;utilisateur.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        
+        <span class="n">selected_row</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">table_concerts</span><span class="o">.</span><span class="n">currentRow</span><span class="p">()</span>
+        <span class="k">if</span> <span class="n">selected_row</span> <span class="o">!=</span> <span class="o">-</span><span class="mi">1</span><span class="p">:</span>
+            <span class="n">confirmation</span> <span class="o">=</span> <span class="n">QMessageBox</span><span class="o">.</span><span class="n">question</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="s1">&#39;Suppression&#39;</span><span class="p">,</span> <span class="s1">&#39;Êtes-vous sûr de vouloir supprimer cette ligne ?&#39;</span><span class="p">,</span> 
+                                               <span class="n">QMessageBox</span><span class="o">.</span><span class="n">Yes</span> <span class="o">|</span> <span class="n">QMessageBox</span><span class="o">.</span><span class="n">No</span><span class="p">)</span>
+
+            <span class="k">if</span> <span class="n">confirmation</span> <span class="o">==</span> <span class="n">QMessageBox</span><span class="o">.</span><span class="n">Yes</span><span class="p">:</span>
+                <span class="c1"># Supprimer la ligne sélectionnée</span>
+                
+
+                                <span class="c1"># Récupérer l&#39;ID de la ligne sélectionnée</span>
+                <span class="n">id_a_supprimer</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">table_concerts</span><span class="o">.</span><span class="n">item</span><span class="p">(</span><span class="n">selected_row</span><span class="p">,</span> <span class="mi">0</span><span class="p">)</span><span class="o">.</span><span class="n">text</span><span class="p">()</span>
+
+                <span class="c1"># Construire la requête DELETE</span>
+                <span class="n">delete_query</span> <span class="o">=</span> <span class="s2">&quot;DELETE FROM concerts WHERE ID = </span><span class="si">%s</span><span class="s2">&quot;</span>
+
+                <span class="bp">self</span><span class="o">.</span><span class="n">donnees_concerts</span><span class="o">.</span><span class="n">execute_concerts_query</span><span class="p">(</span><span class="n">delete_query</span><span class="p">,</span> <span class="p">(</span><span class="n">id_a_supprimer</span><span class="p">,))</span>
+
+                <span class="bp">self</span><span class="o">.</span><span class="n">table_concerts</span><span class="o">.</span><span class="n">removeRow</span><span class="p">(</span><span class="n">selected_row</span><span class="p">)</span></div></div>
+
+
+</pre></div>
+
+           </div>
+          </div>
+          <footer>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2023, ..</p>
+  </div>
+
+  Compilé avec <a href="https://www.sphinx-doc.org/">Sphinx</a> en utilisant un
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">thème</a>
+    fourni par <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

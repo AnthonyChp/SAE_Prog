@@ -1,5 +1,0 @@
-Documentation du code
-*********************
-
-.. automodule:: exemple_ecriture_module
-    :members:

@@ -1,5 +1,5 @@
 """
-.. module:: gestion_graphique
+.. module:: fenetre_principale
    :platform: Unix, windows
    :synopsis: fenetre principale qui réunit les différents bout de code pour former l'application
 
@@ -8,9 +8,7 @@
 
 """
 
-from PyQt5.QtWidgets import QMainWindow, QWidget, QDialog, QMessageBox, QVBoxLayout, QTabWidget, QPushButton, QTableWidget, QTableWidgetItem
-
-import bcrypt
+from PyQt5.QtWidgets import QMainWindow, QWidget, QMessageBox, QVBoxLayout, QTabWidget, QPushButton, QTableWidget, QTableWidgetItem
 
 from modif_spectateurs import ModifSpectateurs
 from modif_concerts import ModifConcerts

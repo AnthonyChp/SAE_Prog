@@ -1,0 +1,405 @@
+<!DOCTYPE html>
+<html class="writer-html5" lang="fr" >
+<head>
+  <meta charset="utf-8" /><meta name="generator" content="Docutils 0.19: https://docutils.sourceforge.io/" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Documentation du code de l’application principale &mdash; Documentation SalleConcert </title>
+      <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
+      <link rel="stylesheet" href="../_static/css/theme.css" type="text/css" />
+  
+        <script data-url_root="../" id="documentation_options" src="../_static/documentation_options.js"></script>
+        <script src="../_static/jquery.js"></script>
+        <script src="../_static/underscore.js"></script>
+        <script src="../_static/_sphinx_javascript_frameworks_compat.js"></script>
+        <script src="../_static/doctools.js"></script>
+        <script src="../_static/sphinx_highlight.js"></script>
+        <script src="../_static/translations.js"></script>
+    <script src="../_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Recherche" href="../search.html" />
+    <link rel="next" title="Documentation du code de l’application de gestion graphique" href="code_gestion_graphique.html" />
+    <link rel="prev" title="Documentation du code" href="code.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+          
+          
+          <a href="../index.html" class="icon icon-home">
+            SalleConcert
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../search.html" method="get">
+    <input type="text" name="q" placeholder="Rechercher docs" aria-label="Rechercher docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <p class="caption" role="heading"><span class="caption-text">Contenu:</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="code.html">Documentation du code</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Application principale</span></p>
+<ul class="current">
+<li class="toctree-l1 current"><a class="current reference internal" href="#">Documentation du code de l’application principale</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Application de gestion graphique</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="code_gestion_graphique.html">Documentation du code de l’application de gestion graphique</a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../index.html">SalleConcert</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="../index.html" class="icon icon-home" aria-label="Home"></a></li>
+      <li class="breadcrumb-item active">Documentation du code de l’application principale</li>
+      <li class="wy-breadcrumbs-aside">
+            <a href="../_sources/content/code_application.rst.txt" rel="nofollow"> Afficher la source de la page</a>
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <section id="module-reservation_app">
+<span id="documentation-du-code-de-l-application-principale"></span><h1>Documentation du code de l’application principale<a class="headerlink" href="#module-reservation_app" title="Lien permanent vers cette rubrique"></a></h1>
+<dl class="py class">
+<dt class="sig sig-object py">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">reservation_app.</span></span><span class="sig-name descname"><span class="pre">ReservationApp</span></span><a class="reference internal" href="../_modules/reservation_app.html#ReservationApp"><span class="viewcode-link"><span class="pre">[source]</span></span></a></dt>
+<dd><p>Bases : <code class="xref py py-class docutils literal notranslate"><span class="pre">QWidget</span></code></p>
+<p>Classe principale de l’application de réservation de concerts.</p>
+<p>Cette classe gère l’interface utilisateur, la connexion/déconnexion des utilisateurs,
+l’affichage des informations de l’utilisateur, et l’interaction avec la base de données.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Variables<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>current_user</strong> (<em>str</em><em> or </em><em>None</em>) – Variable de classe pour stocker le nom de l’utilisateur connecté.</p>
+</dd>
+<dt class="field-even">Example<span class="colon">:</span></dt>
+<dd class="field-even"><p></p></dd>
+</dl>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">app_instance</span> <span class="o">=</span> <span class="n">ReservationApp</span><span class="p">()</span>
+<span class="n">app_instance</span><span class="o">.</span><span class="n">show</span><span class="p">()</span>
+</pre></div>
+</div>
+<dl class="py method">
+<dt class="sig sig-object py">
+<span class="sig-name descname"><span class="pre">handle_concert_click</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">concert_name</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/reservation_app.html#ReservationApp.handle_concert_click"><span class="viewcode-link"><span class="pre">[source]</span></span></a></dt>
+<dd><p>Fonction appelée lorsqu’un bouton de concert est cliqué.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Paramètres<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>concert_name</strong> (<em>str</em>) – Le nom du concert cliqué.</p>
+</dd>
+<dt class="field-even">Renvoie<span class="colon">:</span></dt>
+<dd class="field-even"><p>Aucun</p>
+</dd>
+<dt class="field-odd">Type renvoyé<span class="colon">:</span></dt>
+<dd class="field-odd"><p>None</p>
+</dd>
+<dt class="field-even">Raises<span class="colon">:</span></dt>
+<dd class="field-even"><p>Aucune</p>
+</dd>
+<dt class="field-odd">Example<span class="colon">:</span></dt>
+<dd class="field-odd"><p></p></dd>
+</dl>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">instance</span><span class="o">.</span><span class="n">handle_concert_click</span><span class="p">(</span><span class="s2">&quot;Nom du concert&quot;</span><span class="p">)</span>
+</pre></div>
+</div>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py">
+<span class="sig-name descname"><span class="pre">init_ui</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/reservation_app.html#ReservationApp.init_ui"><span class="viewcode-link"><span class="pre">[source]</span></span></a></dt>
+<dd><p>Initialise l’interface utilisateur de l’application, mettant en place l’affichage de base.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Renvoie<span class="colon">:</span></dt>
+<dd class="field-odd"><p>Aucun</p>
+</dd>
+<dt class="field-even">Type renvoyé<span class="colon">:</span></dt>
+<dd class="field-even"><p>None</p>
+</dd>
+<dt class="field-odd">Raises<span class="colon">:</span></dt>
+<dd class="field-odd"><p>Aucune</p>
+</dd>
+<dt class="field-even">Example<span class="colon">:</span></dt>
+<dd class="field-even"><p></p></dd>
+</dl>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">instance</span><span class="o">.</span><span class="n">init_ui</span><span class="p">()</span>
+</pre></div>
+</div>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py">
+<span class="sig-name descname"><span class="pre">launch_create_account_script</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/reservation_app.html#ReservationApp.launch_create_account_script"><span class="viewcode-link"><span class="pre">[source]</span></span></a></dt>
+<dd><p>Lance l’interface de création de compte dans la base de données.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Renvoie<span class="colon">:</span></dt>
+<dd class="field-odd"><p>Aucun</p>
+</dd>
+<dt class="field-even">Type renvoyé<span class="colon">:</span></dt>
+<dd class="field-even"><p>None</p>
+</dd>
+<dt class="field-odd">Raises<span class="colon">:</span></dt>
+<dd class="field-odd"><p>Aucune</p>
+</dd>
+<dt class="field-even">Example<span class="colon">:</span></dt>
+<dd class="field-even"><p></p></dd>
+</dl>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">instance</span><span class="o">.</span><span class="n">manage_database</span><span class="p">()</span>
+</pre></div>
+</div>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py">
+<span class="sig-name descname"><span class="pre">logout</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/reservation_app.html#ReservationApp.logout"><span class="viewcode-link"><span class="pre">[source]</span></span></a></dt>
+<dd><p>Permet la déconnexion d’un utilisateur lorsqu’il est connecté.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Renvoie<span class="colon">:</span></dt>
+<dd class="field-odd"><p>Aucun</p>
+</dd>
+<dt class="field-even">Type renvoyé<span class="colon">:</span></dt>
+<dd class="field-even"><p>None</p>
+</dd>
+<dt class="field-odd">Raises<span class="colon">:</span></dt>
+<dd class="field-odd"><p>Aucune</p>
+</dd>
+<dt class="field-even">Example<span class="colon">:</span></dt>
+<dd class="field-even"><p></p></dd>
+</dl>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">instance</span><span class="o">.</span><span class="n">logout</span><span class="p">()</span>
+</pre></div>
+</div>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py">
+<span class="sig-name descname"><span class="pre">manage_database</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/reservation_app.html#ReservationApp.manage_database"><span class="viewcode-link"><span class="pre">[source]</span></span></a></dt>
+<dd><p>Lance l’interface de gestion de la base de données pour l’administrateur.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Renvoie<span class="colon">:</span></dt>
+<dd class="field-odd"><p>Aucun</p>
+</dd>
+<dt class="field-even">Type renvoyé<span class="colon">:</span></dt>
+<dd class="field-even"><p>None</p>
+</dd>
+<dt class="field-odd">Raises<span class="colon">:</span></dt>
+<dd class="field-odd"><p>Aucune</p>
+</dd>
+<dt class="field-even">Example<span class="colon">:</span></dt>
+<dd class="field-even"><p></p></dd>
+</dl>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">instance</span><span class="o">.</span><span class="n">manage_database</span><span class="p">()</span>
+</pre></div>
+</div>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py">
+<span class="sig-name descname"><span class="pre">show_admin_controls</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/reservation_app.html#ReservationApp.show_admin_controls"><span class="viewcode-link"><span class="pre">[source]</span></span></a></dt>
+<dd><p>Affiche l’interface d’administration lorsque l’administrateur se connecte.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Renvoie<span class="colon">:</span></dt>
+<dd class="field-odd"><p>Aucun</p>
+</dd>
+<dt class="field-even">Type renvoyé<span class="colon">:</span></dt>
+<dd class="field-even"><p>None</p>
+</dd>
+<dt class="field-odd">Raises<span class="colon">:</span></dt>
+<dd class="field-odd"><p>Aucune</p>
+</dd>
+<dt class="field-even">Example<span class="colon">:</span></dt>
+<dd class="field-even"><p></p></dd>
+</dl>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">instance</span><span class="o">.</span><span class="n">show_admin_controls</span><span class="p">()</span>
+</pre></div>
+</div>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py">
+<span class="sig-name descname"><span class="pre">show_login_dialog</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/reservation_app.html#ReservationApp.show_login_dialog"><span class="viewcode-link"><span class="pre">[source]</span></span></a></dt>
+<dd><p>Lance la boîte de dialogue de connexion lorsque le bouton “Se connecter” est cliqué,
+permettant la récupération des informations de l’utilisateur depuis la base de données.
+Vérifie si l’utilisateur connecté est un administrateur et met à jour l’interface utilisateur en conséquence.
+Remplace le bouton “Se connecter” par “Déconnexion” si l’utilisateur n’est pas un administrateur.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Renvoie<span class="colon">:</span></dt>
+<dd class="field-odd"><p>Aucun</p>
+</dd>
+<dt class="field-even">Type renvoyé<span class="colon">:</span></dt>
+<dd class="field-even"><p>None</p>
+</dd>
+<dt class="field-odd">Raises<span class="colon">:</span></dt>
+<dd class="field-odd"><p>Aucune</p>
+</dd>
+<dt class="field-even">Example<span class="colon">:</span></dt>
+<dd class="field-even"><p></p></dd>
+</dl>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span>
+</pre></div>
+</div>
+<p>instance.show_login_dialog()</p>
+</dd></dl>
+
+</dd></dl>
+
+<span class="target" id="module-main"></span><dl class="py class">
+<dt class="sig sig-object py">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">login_dialog.</span></span><span class="sig-name descname"><span class="pre">LoginDialog</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">parent</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/login_dialog.html#LoginDialog"><span class="viewcode-link"><span class="pre">[source]</span></span></a></dt>
+<dd><p>Bases : <code class="xref py py-class docutils literal notranslate"><span class="pre">QDialog</span></code></p>
+<p>Cette classe permet à l’utilisateur de saisir son adresse e-mail et son mot de passe,
+puis de tenter de se connecter en vérifiant les informations dans une base de données.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Variables<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>username_label</strong> (<em>QLabel</em>) – Étiquette pour le champ de saisie de l’adresse e-mail.</p></li>
+<li><p><strong>username_edit</strong> (<em>QLineEdit</em>) – Champ de saisie de l’adresse e-mail.</p></li>
+<li><p><strong>password_label</strong> (<em>QLabel</em>) – Étiquette pour le champ de saisie du mot de passe.</p></li>
+<li><p><strong>password_edit</strong> (<em>QLineEdit</em>) – Champ de saisie du mot de passe avec masquage.</p></li>
+<li><p><strong>login_button</strong> (<em>QPushButton</em>) – Bouton pour tenter la connexion.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Example<span class="colon">:</span></dt>
+<dd class="field-even"><p></p></dd>
+</dl>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">login_dialog</span> <span class="o">=</span> <span class="n">LoginDialog</span><span class="p">(</span><span class="n">parent_instance</span><span class="p">)</span>
+<span class="k">if</span> <span class="n">login_dialog</span><span class="o">.</span><span class="n">exec_</span><span class="p">()</span> <span class="o">==</span> <span class="n">QDialog</span><span class="o">.</span><span class="n">Accepted</span><span class="p">:</span>
+    <span class="n">email</span> <span class="o">=</span> <span class="n">login_dialog</span><span class="o">.</span><span class="n">get_email</span><span class="p">()</span>
+    <span class="c1"># Utiliser l&#39;adresse e-mail récupérée</span>
+</pre></div>
+</div>
+<dl class="py method">
+<dt class="sig sig-object py">
+<span class="sig-name descname"><span class="pre">get_email</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/login_dialog.html#LoginDialog.get_email"><span class="viewcode-link"><span class="pre">[source]</span></span></a></dt>
+<dd><p>Récupère l’adresse e-mail saisie par l’utilisateur.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Renvoie<span class="colon">:</span></dt>
+<dd class="field-odd"><p>L’adresse e-mail saisie par l’utilisateur.</p>
+</dd>
+<dt class="field-even">Type renvoyé<span class="colon">:</span></dt>
+<dd class="field-even"><p>str</p>
+</dd>
+<dt class="field-odd">Raises<span class="colon">:</span></dt>
+<dd class="field-odd"><p>Aucune</p>
+</dd>
+<dt class="field-even">Example<span class="colon">:</span></dt>
+<dd class="field-even"><p></p></dd>
+</dl>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">email</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">get_email</span><span class="p">()</span>
+</pre></div>
+</div>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py">
+<span class="sig-name descname"><span class="pre">try_login</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/login_dialog.html#LoginDialog.try_login"><span class="viewcode-link"><span class="pre">[source]</span></span></a></dt>
+<dd><p>Tente de connecter l’utilisateur en vérifiant les informations dans la base de données.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Renvoie<span class="colon">:</span></dt>
+<dd class="field-odd"><p>Aucun</p>
+</dd>
+<dt class="field-even">Type renvoyé<span class="colon">:</span></dt>
+<dd class="field-even"><p>None</p>
+</dd>
+<dt class="field-odd">Raises<span class="colon">:</span></dt>
+<dd class="field-odd"><p>Aucune</p>
+</dd>
+<dt class="field-even">Example<span class="colon">:</span></dt>
+<dd class="field-even"><p></p></dd>
+</dl>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="bp">self</span><span class="o">.</span><span class="n">try_login</span><span class="p">()</span>
+</pre></div>
+</div>
+</dd></dl>
+
+</dd></dl>
+
+<span class="target" id="module-0"></span><dl class="py class">
+<dt class="sig sig-object py">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">creation_compte.</span></span><span class="sig-name descname"><span class="pre">RegistrationApp</span></span><a class="reference internal" href="../_modules/creation_compte.html#RegistrationApp"><span class="viewcode-link"><span class="pre">[source]</span></span></a></dt>
+<dd><p>Bases : <code class="xref py py-class docutils literal notranslate"><span class="pre">QWidget</span></code></p>
+<p>Cette classe permet à l’utilisateur de saisir les informations nécessaires pour créer un compte,
+puis d’envoyer ces informations à une base de données après un processus de hachage du mot de passe.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Variables<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>nom_label</strong> (<em>QLabel</em>) – Étiquette pour le champ de saisie du nom.</p></li>
+<li><p><strong>nom_edit</strong> (<em>QLineEdit</em>) – Champ de saisie du nom.</p></li>
+<li><p><strong>prenom_label</strong> (<em>QLabel</em>) – Étiquette pour le champ de saisie du prénom.</p></li>
+<li><p><strong>prenom_edit</strong> (<em>QLineEdit</em>) – Champ de saisie du prénom.</p></li>
+<li><p><strong>num_tel_label</strong> (<em>QLabel</em>) – Étiquette pour le champ de saisie du numéro de téléphone.</p></li>
+<li><p><strong>num_tel_edit</strong> (<em>QLineEdit</em>) – Champ de saisie du numéro de téléphone.</p></li>
+<li><p><strong>email_label</strong> (<em>QLabel</em>) – Étiquette pour le champ de saisie de l’adresse e-mail.</p></li>
+<li><p><strong>email_edit</strong> (<em>QLineEdit</em>) – Champ de saisie de l’adresse e-mail.</p></li>
+<li><p><strong>password_label</strong> (<em>QLabel</em>) – Étiquette pour le champ de saisie du mot de passe.</p></li>
+<li><p><strong>password_edit</strong> (<em>QLineEdit</em>) – Champ de saisie du mot de passe avec masquage.</p></li>
+<li><p><strong>register_button</strong> (<em>QPushButton</em>) – Bouton pour créer un compte.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Example<span class="colon">:</span></dt>
+<dd class="field-even"><p></p></dd>
+</dl>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">registration_app</span> <span class="o">=</span> <span class="n">RegistrationApp</span><span class="p">()</span>
+<span class="n">registration_app</span><span class="o">.</span><span class="n">show</span><span class="p">()</span>
+</pre></div>
+</div>
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">seat_button.</span></span><span class="sig-name descname"><span class="pre">SeatButton</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">row</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">col</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">concert_name</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/seat_button.html#SeatButton"><span class="viewcode-link"><span class="pre">[source]</span></span></a></dt>
+<dd><p>Bases : <code class="xref py py-class docutils literal notranslate"><span class="pre">QPushButton</span></code></p>
+</dd></dl>
+
+</section>
+
+
+           </div>
+          </div>
+          <footer><div class="rst-footer-buttons" role="navigation" aria-label="Pied de page">
+        <a href="code.html" class="btn btn-neutral float-left" title="Documentation du code" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Précédent</a>
+        <a href="code_gestion_graphique.html" class="btn btn-neutral float-right" title="Documentation du code de l’application de gestion graphique" accesskey="n" rel="next">Suivant <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+    </div>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2023, ..</p>
+  </div>
+
+  Compilé avec <a href="https://www.sphinx-doc.org/">Sphinx</a> en utilisant un
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">thème</a>
+    fourni par <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

@@ -1,5 +1,5 @@
 """
-.. module:: gestion_graphique
+.. module:: modif_spectateurs
    :platform: Unix, windows
    :synopsis: classe pour assurer la modification des spectateurs dans la base de données
 

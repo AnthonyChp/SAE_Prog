@@ -1,0 +1,243 @@
+<!DOCTYPE html>
+<html class="writer-html5" lang="fr" >
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>modif_spectateurs &mdash; Documentation SalleConcert </title>
+      <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
+      <link rel="stylesheet" href="../_static/css/theme.css" type="text/css" />
+  
+        <script data-url_root="../" id="documentation_options" src="../_static/documentation_options.js"></script>
+        <script src="../_static/jquery.js"></script>
+        <script src="../_static/underscore.js"></script>
+        <script src="../_static/_sphinx_javascript_frameworks_compat.js"></script>
+        <script src="../_static/doctools.js"></script>
+        <script src="../_static/sphinx_highlight.js"></script>
+        <script src="../_static/translations.js"></script>
+    <script src="../_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Recherche" href="../search.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+          
+          
+          <a href="../index.html" class="icon icon-home">
+            SalleConcert
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../search.html" method="get">
+    <input type="text" name="q" placeholder="Rechercher docs" aria-label="Rechercher docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <p class="caption" role="heading"><span class="caption-text">Contenu:</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../content/code.html">Documentation du code</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Application principale</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../content/code_application.html">Documentation du code de l’application principale</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Application de gestion graphique</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../content/code_gestion_graphique.html">Documentation du code de l’application de gestion graphique</a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../index.html">SalleConcert</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="../index.html" class="icon icon-home" aria-label="Home"></a></li>
+          <li class="breadcrumb-item"><a href="index.html">Code du module</a></li>
+      <li class="breadcrumb-item active">modif_spectateurs</li>
+      <li class="wy-breadcrumbs-aside">
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <h1>Code source de modif_spectateurs</h1><div class="highlight"><pre>
+<span></span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">.. module:: modif_spectateurs</span>
+<span class="sd">   :platform: Unix, windows</span>
+<span class="sd">   :synopsis: classe pour assurer la modification des spectateurs dans la base de données</span>
+
+<span class="sd">.. moduleauthor:: Bauwens Matthieu &lt;matthieu.bauwens@etu.univ-poitiers.fr&gt;</span>
+
+
+<span class="sd">&quot;&quot;&quot;</span>
+
+<span class="kn">from</span> <span class="nn">PyQt5.QtWidgets</span> <span class="kn">import</span> <span class="n">QLabel</span><span class="p">,</span> <span class="n">QDialog</span><span class="p">,</span> <span class="n">QPushButton</span><span class="p">,</span> <span class="n">QLineEdit</span><span class="p">,</span> <span class="n">QMessageBox</span><span class="p">,</span> <span class="n">QGridLayout</span>
+<span class="kn">import</span> <span class="nn">bcrypt</span>
+
+<div class="viewcode-block" id="ModifSpectateurs"><a class="viewcode-back" href="../content/code_gestion_graphique.html#modif_spectateurs.ModifSpectateurs">[docs]</a><span class="k">class</span> <span class="nc">ModifSpectateurs</span><span class="p">(</span><span class="n">QDialog</span><span class="p">):</span>
+
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    classe ModifSpectateurs qui permet de modifier des spectateurs dans la base de données</span>
+
+<span class="sd">    :param data_to_edit: les données du spectateur à éditer.</span>
+<span class="sd">    :type data_to_edit: tuple</span>
+<span class="sd">    :param donnees_spectateurs: l&#39;objet gérant l&#39;accès à la base de données des spectateurs.</span>
+<span class="sd">    :type donnees_spectateurs: DatabaseManager</span>
+<span class="sd">    </span>
+<span class="sd">    &quot;&quot;&quot;</span>
+        
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">data_to_edit</span><span class="p">,</span> <span class="n">donnees_spectateurs</span><span class="p">):</span>
+
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        initialise une nouvelle instance de la classe ModifSpectateurs.</span>
+
+<span class="sd">        :param data_to_edit: les données du spectateur à éditer.</span>
+<span class="sd">        :type data_to_edit: tuple</span>
+<span class="sd">        :param donnees_spectateurs: l&#39;objet gérant l&#39;accès à la base de données des spectateurs.</span>
+<span class="sd">        :type donnees_spectateurs: DatabaseManager</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        
+        <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">()</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">donnees_spectateurs</span> <span class="o">=</span> <span class="n">donnees_spectateurs</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">data_to_edit</span> <span class="o">=</span> <span class="n">data_to_edit</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">setWindowTitle</span><span class="p">(</span><span class="s1">&#39;Modification de spectateur&#39;</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">resize</span><span class="p">(</span><span class="mi">500</span><span class="p">,</span> <span class="mi">350</span><span class="p">)</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">nom_label</span> <span class="o">=</span> <span class="n">QLabel</span><span class="p">(</span><span class="s1">&#39;Nom :&#39;</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">nom_edit</span> <span class="o">=</span> <span class="n">QLineEdit</span><span class="p">(</span><span class="n">data_to_edit</span><span class="p">[</span><span class="mi">1</span><span class="p">])</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">prenom_label</span> <span class="o">=</span> <span class="n">QLabel</span><span class="p">(</span><span class="s1">&#39;Prénom :&#39;</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">prenom_edit</span> <span class="o">=</span> <span class="n">QLineEdit</span><span class="p">(</span><span class="n">data_to_edit</span><span class="p">[</span><span class="mi">2</span><span class="p">])</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">num_tel_label</span> <span class="o">=</span> <span class="n">QLabel</span><span class="p">(</span><span class="s1">&#39;Numéro de téléphone :&#39;</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">num_tel_edit</span> <span class="o">=</span> <span class="n">QLineEdit</span><span class="p">(</span><span class="n">data_to_edit</span><span class="p">[</span><span class="mi">3</span><span class="p">])</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">email_label</span> <span class="o">=</span> <span class="n">QLabel</span><span class="p">(</span><span class="s1">&#39;Adresse e-mail :&#39;</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">email_edit</span> <span class="o">=</span> <span class="n">QLineEdit</span><span class="p">(</span><span class="n">data_to_edit</span><span class="p">[</span><span class="mi">4</span><span class="p">])</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">password_label</span> <span class="o">=</span> <span class="n">QLabel</span><span class="p">(</span><span class="s1">&#39;Mot de passe :&#39;</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">password_edit</span> <span class="o">=</span> <span class="n">QLineEdit</span><span class="p">(</span><span class="n">data_to_edit</span><span class="p">[</span><span class="mi">5</span><span class="p">])</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">password_edit</span><span class="o">.</span><span class="n">setEchoMode</span><span class="p">(</span><span class="n">QLineEdit</span><span class="o">.</span><span class="n">Password</span><span class="p">)</span>  <span class="c1"># Masquer le mot de passe</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">id_concert_label</span> <span class="o">=</span> <span class="n">QLabel</span><span class="p">(</span><span class="s1">&#39;ID du Concert :&#39;</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">id_concert_edit</span> <span class="o">=</span> <span class="n">QLineEdit</span><span class="p">(</span><span class="n">data_to_edit</span><span class="p">[</span><span class="mi">6</span><span class="p">])</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">nb_place_achete_label</span> <span class="o">=</span> <span class="n">QLabel</span><span class="p">(</span><span class="s1">&#39;Nombre de places achetées :&#39;</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">nb_place_achete_edit</span> <span class="o">=</span> <span class="n">QLineEdit</span><span class="p">(</span><span class="n">data_to_edit</span><span class="p">[</span><span class="mi">7</span><span class="p">])</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">emplacement_label</span> <span class="o">=</span> <span class="n">QLabel</span><span class="p">(</span><span class="s1">&#39;Emplacement :&#39;</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">emplacement_edit</span> <span class="o">=</span> <span class="n">QLineEdit</span><span class="p">(</span><span class="n">data_to_edit</span><span class="p">[</span><span class="mi">8</span><span class="p">])</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">tarif_label</span> <span class="o">=</span> <span class="n">QLabel</span><span class="p">(</span><span class="s1">&#39;Tarif :&#39;</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">tarif_edit</span> <span class="o">=</span> <span class="n">QLineEdit</span><span class="p">(</span><span class="n">data_to_edit</span><span class="p">[</span><span class="mi">9</span><span class="p">])</span>
+
+        <span class="n">layout</span> <span class="o">=</span> <span class="n">QGridLayout</span><span class="p">()</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">bouton_modif</span> <span class="o">=</span> <span class="n">QPushButton</span><span class="p">(</span><span class="s2">&quot;Confirmer la modification&quot;</span><span class="p">)</span>
+        <span class="n">layout</span><span class="o">.</span><span class="n">addWidget</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">bouton_modif</span><span class="p">)</span>
+
+        <span class="c1"># Connecter le bouton à la fonction</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">bouton_modif</span><span class="o">.</span><span class="n">clicked</span><span class="o">.</span><span class="n">connect</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">modifier_spectateurs</span><span class="p">)</span>
+
+        <span class="n">layout</span><span class="o">.</span><span class="n">addWidget</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">nom_label</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">)</span>
+        <span class="n">layout</span><span class="o">.</span><span class="n">addWidget</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">nom_edit</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">)</span>
+        <span class="n">layout</span><span class="o">.</span><span class="n">addWidget</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">prenom_label</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">0</span><span class="p">)</span>
+        <span class="n">layout</span><span class="o">.</span><span class="n">addWidget</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">prenom_edit</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">)</span>
+        <span class="n">layout</span><span class="o">.</span><span class="n">addWidget</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">num_tel_label</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="mi">0</span><span class="p">)</span>
+        <span class="n">layout</span><span class="o">.</span><span class="n">addWidget</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">num_tel_edit</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="mi">1</span><span class="p">)</span>
+        <span class="n">layout</span><span class="o">.</span><span class="n">addWidget</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">email_label</span><span class="p">,</span> <span class="mi">3</span><span class="p">,</span> <span class="mi">0</span><span class="p">)</span>
+        <span class="n">layout</span><span class="o">.</span><span class="n">addWidget</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">email_edit</span><span class="p">,</span> <span class="mi">3</span><span class="p">,</span> <span class="mi">1</span><span class="p">)</span>
+        <span class="n">layout</span><span class="o">.</span><span class="n">addWidget</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">password_label</span><span class="p">,</span><span class="mi">4</span><span class="p">,</span> <span class="mi">0</span><span class="p">)</span>
+        <span class="n">layout</span><span class="o">.</span><span class="n">addWidget</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">password_edit</span><span class="p">,</span> <span class="mi">4</span><span class="p">,</span> <span class="mi">1</span><span class="p">)</span>
+        <span class="n">layout</span><span class="o">.</span><span class="n">addWidget</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">id_concert_label</span><span class="p">,</span> <span class="mi">5</span><span class="p">,</span> <span class="mi">0</span><span class="p">)</span>
+        <span class="n">layout</span><span class="o">.</span><span class="n">addWidget</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">id_concert_edit</span><span class="p">,</span> <span class="mi">5</span><span class="p">,</span> <span class="mi">1</span><span class="p">)</span>
+        <span class="n">layout</span><span class="o">.</span><span class="n">addWidget</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">nb_place_achete_label</span><span class="p">,</span> <span class="mi">6</span><span class="p">,</span> <span class="mi">0</span><span class="p">)</span>
+        <span class="n">layout</span><span class="o">.</span><span class="n">addWidget</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">nb_place_achete_edit</span><span class="p">,</span> <span class="mi">6</span><span class="p">,</span> <span class="mi">1</span><span class="p">)</span>
+        <span class="n">layout</span><span class="o">.</span><span class="n">addWidget</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">emplacement_label</span><span class="p">,</span> <span class="mi">7</span><span class="p">,</span> <span class="mi">0</span><span class="p">)</span>
+        <span class="n">layout</span><span class="o">.</span><span class="n">addWidget</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">emplacement_edit</span><span class="p">,</span> <span class="mi">7</span><span class="p">,</span> <span class="mi">1</span><span class="p">)</span>
+        <span class="n">layout</span><span class="o">.</span><span class="n">addWidget</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">tarif_label</span><span class="p">,</span> <span class="mi">8</span><span class="p">,</span> <span class="mi">0</span><span class="p">)</span>
+        <span class="n">layout</span><span class="o">.</span><span class="n">addWidget</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">tarif_edit</span><span class="p">,</span> <span class="mi">8</span><span class="p">,</span> <span class="mi">1</span><span class="p">)</span>
+        <span class="n">layout</span><span class="o">.</span><span class="n">addWidget</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">bouton_modif</span><span class="p">,</span> <span class="mi">9</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">2</span><span class="p">)</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">setLayout</span><span class="p">(</span><span class="n">layout</span><span class="p">)</span>
+
+<div class="viewcode-block" id="ModifSpectateurs.modifier_spectateurs"><a class="viewcode-back" href="../content/code_gestion_graphique.html#modif_spectateurs.ModifSpectateurs.modifier_spectateurs">[docs]</a>    <span class="k">def</span> <span class="nf">modifier_spectateurs</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Fonction appelée lorsqu&#39;on clique sur le bouton de modification.</span>
+
+<span class="sd">        Elle récupère les valeurs des champs de saisie, valide les champs, effectue le hachage du mot de passe,</span>
+<span class="sd">        construit la requête UPDATE puis exécute la requête.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+
+        <span class="c1"># Récupérer les valeurs des champs de saisie</span>
+        <span class="n">nom</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">nom_edit</span><span class="o">.</span><span class="n">text</span><span class="p">()</span>
+        <span class="n">prenom</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">prenom_edit</span><span class="o">.</span><span class="n">text</span><span class="p">()</span>
+        <span class="n">num_tel</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">num_tel_edit</span><span class="o">.</span><span class="n">text</span><span class="p">()</span>
+        <span class="n">email</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">email_edit</span><span class="o">.</span><span class="n">text</span><span class="p">()</span>
+        <span class="n">password</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">password_edit</span><span class="o">.</span><span class="n">text</span><span class="p">()</span>
+        <span class="n">id_concert</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">id_concert_edit</span><span class="o">.</span><span class="n">text</span><span class="p">()</span>
+        <span class="n">nb_place_achete</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">nb_place_achete_edit</span><span class="o">.</span><span class="n">text</span><span class="p">()</span>
+        <span class="n">emplacement</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">emplacement_edit</span><span class="o">.</span><span class="n">text</span><span class="p">()</span>
+        <span class="n">tarif</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">tarif_edit</span><span class="o">.</span><span class="n">text</span><span class="p">()</span>
+
+        <span class="c1"># Valider que tous les champs sont remplis</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="n">nom</span> <span class="ow">or</span> <span class="ow">not</span> <span class="n">prenom</span> <span class="ow">or</span> <span class="ow">not</span> <span class="n">num_tel</span> <span class="ow">or</span> <span class="ow">not</span> <span class="n">email</span> <span class="ow">or</span> <span class="ow">not</span> <span class="n">password</span><span class="p">:</span>
+            <span class="n">QMessageBox</span><span class="o">.</span><span class="n">warning</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="s1">&#39;Champs non remplis&#39;</span><span class="p">,</span> <span class="s1">&#39;Veuillez remplir tous les champs.&#39;</span><span class="p">)</span>
+            <span class="k">return</span>
+
+        <span class="n">hashed_password</span> <span class="o">=</span> <span class="n">bcrypt</span><span class="o">.</span><span class="n">hashpw</span><span class="p">(</span><span class="n">password</span><span class="o">.</span><span class="n">encode</span><span class="p">(</span><span class="s1">&#39;utf-8&#39;</span><span class="p">),</span> <span class="n">bcrypt</span><span class="o">.</span><span class="n">gensalt</span><span class="p">())</span>
+
+        <span class="c1"># Construire la requête UPDATE</span>
+        <span class="n">query_modif</span> <span class="o">=</span> <span class="s2">&quot;UPDATE spectateurs SET nom = </span><span class="si">%s</span><span class="s2">, prenom = </span><span class="si">%s</span><span class="s2">, num_tel = </span><span class="si">%s</span><span class="s2">, email = </span><span class="si">%s</span><span class="s2">, mot_de_passe = </span><span class="si">%s</span><span class="s2">, id_concert = </span><span class="si">%s</span><span class="s2">, nb_place_achete = </span><span class="si">%s</span><span class="s2">, emplacement = </span><span class="si">%s</span><span class="s2">, tarif = </span><span class="si">%s</span><span class="s2"> WHERE ID = </span><span class="si">%s</span><span class="s2">&quot;</span>
+        <span class="n">valeurs</span> <span class="o">=</span> <span class="p">(</span><span class="n">nom</span><span class="p">,</span> <span class="n">prenom</span><span class="p">,</span> <span class="n">num_tel</span><span class="p">,</span> <span class="n">email</span><span class="p">,</span> <span class="n">hashed_password</span><span class="p">,</span> <span class="n">id_concert</span> <span class="ow">or</span> <span class="kc">None</span><span class="p">,</span> <span class="n">nb_place_achete</span> <span class="ow">or</span> <span class="kc">None</span><span class="p">,</span> <span class="n">emplacement</span> <span class="ow">or</span> <span class="kc">None</span><span class="p">,</span> <span class="n">tarif</span> <span class="ow">or</span> <span class="kc">None</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">data_to_edit</span><span class="p">[</span><span class="mi">0</span><span class="p">])</span>
+        <span class="c1"># Exécuter la requête UPDATE dans la base de données</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">donnees_spectateurs</span><span class="o">.</span><span class="n">execute_spectateurs_query</span><span class="p">(</span><span class="n">query_modif</span><span class="p">,</span> <span class="n">valeurs</span><span class="p">)</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">accept</span><span class="p">()</span></div></div>
+</pre></div>
+
+           </div>
+          </div>
+          <footer>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2023, ..</p>
+  </div>
+
+  Compilé avec <a href="https://www.sphinx-doc.org/">Sphinx</a> en utilisant un
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">thème</a>
+    fourni par <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

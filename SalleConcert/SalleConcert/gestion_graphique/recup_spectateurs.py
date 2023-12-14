@@ -1,5 +1,5 @@
 """
-.. module:: gestion_graphique
+.. module:: recup_spectateurs
    :platform: Unix, windows
    :synopsis: Module pour récupérer les données de la table spectateurs dans la base de données
 

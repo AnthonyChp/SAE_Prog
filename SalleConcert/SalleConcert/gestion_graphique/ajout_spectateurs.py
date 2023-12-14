@@ -1,5 +1,5 @@
 """
-.. module:: gestion_graphique
+.. module:: ajout_spectateurs
    :platform: Unix, windows
    :synopsis: classe pour ajouter des spectateurs dans la base de données
 

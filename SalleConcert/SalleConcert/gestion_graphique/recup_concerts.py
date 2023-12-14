@@ -1,5 +1,5 @@
 """
-.. module:: gestion_graphique
+.. module:: recup_concerts
    :platform: Unix, windows
    :synopsis: Module pour récupérer les données de la table concerts dans la base de données
 

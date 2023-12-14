@@ -1,5 +1,5 @@
 """
-.. module:: gestion_graphique
+.. module:: modif_concerts
    :platform: Unix, windows
    :synopsis: classe pour modifier des concerts dans la base de données
 

@@ -1,0 +1,343 @@
+<!DOCTYPE html>
+<html class="writer-html5" lang="fr" >
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>reservation_app &mdash; Documentation SalleConcert </title>
+      <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
+      <link rel="stylesheet" href="../_static/css/theme.css" type="text/css" />
+  
+        <script data-url_root="../" id="documentation_options" src="../_static/documentation_options.js"></script>
+        <script src="../_static/jquery.js"></script>
+        <script src="../_static/underscore.js"></script>
+        <script src="../_static/_sphinx_javascript_frameworks_compat.js"></script>
+        <script src="../_static/doctools.js"></script>
+        <script src="../_static/sphinx_highlight.js"></script>
+        <script src="../_static/translations.js"></script>
+    <script src="../_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Recherche" href="../search.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+          
+          
+          <a href="../index.html" class="icon icon-home">
+            SalleConcert
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../search.html" method="get">
+    <input type="text" name="q" placeholder="Rechercher docs" aria-label="Rechercher docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <p class="caption" role="heading"><span class="caption-text">Contenu:</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../content/code.html">Documentation du code</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Application principale</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../content/code_application.html">Documentation du code de l’application principale</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Application de gestion graphique</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../content/code_gestion_graphique.html">Documentation du code de l’application de gestion graphique</a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../index.html">SalleConcert</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="../index.html" class="icon icon-home" aria-label="Home"></a></li>
+          <li class="breadcrumb-item"><a href="index.html">Code du module</a></li>
+      <li class="breadcrumb-item active">reservation_app</li>
+      <li class="wy-breadcrumbs-aside">
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <h1>Code source de reservation_app</h1><div class="highlight"><pre>
+<span></span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">.. module:: reservation_app</span>
+<span class="sd">   :platform: Unix, Windows</span>
+<span class="sd">   :synopsis: Confection de l&#39;application Salle_Concert.</span>
+
+<span class="sd">.. moduleauthor:: Chapus Anthony &lt;anthony.chapus1002@etu.univ-poitiers.fr&gt;</span>
+
+<span class="sd">&quot;&quot;&quot;</span>
+
+<span class="kn">from</span> <span class="nn">PyQt5.QtWidgets</span> <span class="kn">import</span> <span class="n">QWidget</span><span class="p">,</span> <span class="n">QPushButton</span><span class="p">,</span> <span class="n">QLabel</span><span class="p">,</span> <span class="n">QGridLayout</span><span class="p">,</span> <span class="n">QDialog</span><span class="p">,</span> <span class="n">QApplication</span><span class="p">,</span> <span class="n">QMessageBox</span>
+<span class="kn">import</span> <span class="nn">mysql.connector</span>
+<span class="kn">import</span> <span class="nn">subprocess</span>
+<span class="kn">from</span> <span class="nn">login_dialog</span> <span class="kn">import</span> <span class="n">LoginDialog</span>
+<span class="kn">from</span> <span class="nn">seat_button</span> <span class="kn">import</span> <span class="n">SeatButton</span>
+<span class="kn">from</span> <span class="nn">PyQt5.QtCore</span> <span class="kn">import</span> <span class="n">Qt</span>
+<span class="kn">import</span> <span class="nn">sys</span>
+<span class="kn">from</span> <span class="nn">functools</span> <span class="kn">import</span> <span class="n">partial</span>
+
+<div class="viewcode-block" id="ReservationApp"><a class="viewcode-back" href="../content/code_application.html#reservation_app.ReservationApp">[docs]</a><span class="k">class</span> <span class="nc">ReservationApp</span><span class="p">(</span><span class="n">QWidget</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Classe principale de l&#39;application de réservation de concerts.</span>
+
+<span class="sd">    Cette classe gère l&#39;interface utilisateur, la connexion/déconnexion des utilisateurs,</span>
+<span class="sd">    l&#39;affichage des informations de l&#39;utilisateur, et l&#39;interaction avec la base de données.</span>
+
+<span class="sd">    :ivar current_user: Variable de classe pour stocker le nom de l&#39;utilisateur connecté.</span>
+<span class="sd">    :vartype current_user: str or None</span>
+
+<span class="sd">    :example:</span>
+
+<span class="sd">    .. code-block:: python</span>
+
+<span class="sd">        app_instance = ReservationApp()</span>
+<span class="sd">        app_instance.show()</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">current_user</span> <span class="o">=</span> <span class="kc">None</span>  <span class="c1"># Variable de classe pour stocker le nom de l&#39;utilisateur connecté</span>
+
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">()</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">init_ui</span><span class="p">()</span>
+
+<div class="viewcode-block" id="ReservationApp.init_ui"><a class="viewcode-back" href="../content/code_application.html#reservation_app.ReservationApp.init_ui">[docs]</a>    <span class="k">def</span> <span class="nf">init_ui</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Initialise l&#39;interface utilisateur de l&#39;application, mettant en place l&#39;affichage de base.</span>
+<span class="sd">    </span>
+<span class="sd">        :return: Aucun</span>
+<span class="sd">        :rtype: None</span>
+<span class="sd">        :raises: Aucune</span>
+
+<span class="sd">        :example:</span>
+
+<span class="sd">        .. code-block:: python</span>
+
+<span class="sd">            instance.init_ui()</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">setWindowTitle</span><span class="p">(</span><span class="s1">&#39;Réservation de Concert&#39;</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">showMaximized</span><span class="p">()</span>  <span class="c1"># Met la fenêtre à la taille de l&#39;écran</span>
+
+        <span class="c1"># --- Création de tous nos boutons ---#</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">login_button</span> <span class="o">=</span> <span class="n">QPushButton</span><span class="p">(</span><span class="s1">&#39;Se connecter&#39;</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">login_button</span><span class="o">.</span><span class="n">clicked</span><span class="o">.</span><span class="n">connect</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">show_login_dialog</span><span class="p">)</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">create_account_button</span> <span class="o">=</span> <span class="n">QPushButton</span><span class="p">(</span><span class="s1">&#39;Créer un compte&#39;</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">create_account_button</span><span class="o">.</span><span class="n">clicked</span><span class="o">.</span><span class="n">connect</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">launch_create_account_script</span><span class="p">)</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">manage_database_button</span> <span class="o">=</span> <span class="n">QPushButton</span><span class="p">(</span><span class="s1">&#39;Gérer la base de données&#39;</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">manage_database_button</span><span class="o">.</span><span class="n">clicked</span><span class="o">.</span><span class="n">connect</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">manage_database</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">manage_database_button</span><span class="o">.</span><span class="n">setVisible</span><span class="p">(</span><span class="kc">False</span><span class="p">)</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">username_label</span> <span class="o">=</span> <span class="n">QLabel</span><span class="p">()</span>
+
+        <span class="c1"># ------------------------------------#</span>
+
+        <span class="c1"># --- Création de tous nos layout pour placer nos boutons ---#</span>
+
+        <span class="n">layout</span> <span class="o">=</span> <span class="n">QGridLayout</span><span class="p">()</span>
+
+        <span class="n">layout</span><span class="o">.</span><span class="n">addWidget</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">login_button</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">5</span><span class="p">,</span> <span class="n">alignment</span><span class="o">=</span><span class="n">Qt</span><span class="o">.</span><span class="n">AlignTop</span> <span class="o">|</span> <span class="n">Qt</span><span class="o">.</span><span class="n">AlignLeft</span><span class="p">)</span>
+        <span class="n">layout</span><span class="o">.</span><span class="n">addWidget</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">create_account_button</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">6</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">5</span><span class="p">,</span> <span class="n">alignment</span><span class="o">=</span><span class="n">Qt</span><span class="o">.</span><span class="n">AlignTop</span> <span class="o">|</span> <span class="n">Qt</span><span class="o">.</span><span class="n">AlignRight</span><span class="p">)</span>
+        <span class="n">layout</span><span class="o">.</span><span class="n">addWidget</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">manage_database_button</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">6</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">5</span><span class="p">,</span> <span class="n">alignment</span><span class="o">=</span><span class="n">Qt</span><span class="o">.</span><span class="n">AlignTop</span> <span class="o">|</span> <span class="n">Qt</span><span class="o">.</span><span class="n">AlignRight</span><span class="p">)</span>
+        <span class="n">layout</span><span class="o">.</span><span class="n">addWidget</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">username_label</span><span class="p">,</span> <span class="mi">3</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">10</span><span class="p">)</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">seat_buttons</span> <span class="o">=</span> <span class="p">[]</span>
+
+        <span class="c1"># -----------------------------------------------------------#</span>
+
+        <span class="c1"># Connexion à la base de données</span>
+        <span class="n">connection</span> <span class="o">=</span> <span class="n">mysql</span><span class="o">.</span><span class="n">connector</span><span class="o">.</span><span class="n">connect</span><span class="p">(</span>
+            <span class="n">host</span><span class="o">=</span><span class="s1">&#39;localhost&#39;</span><span class="p">,</span>
+            <span class="n">user</span><span class="o">=</span><span class="s1">&#39;admin&#39;</span><span class="p">,</span>
+            <span class="n">password</span><span class="o">=</span><span class="s1">&#39;admin&#39;</span><span class="p">,</span>
+            <span class="n">database</span><span class="o">=</span><span class="s1">&#39;salle_concert&#39;</span>
+        <span class="p">)</span>
+        <span class="n">cursor</span> <span class="o">=</span> <span class="n">connection</span><span class="o">.</span><span class="n">cursor</span><span class="p">()</span>
+
+        <span class="c1"># Permet de récupérer les concerts de la base de données</span>
+        <span class="n">cursor</span><span class="o">.</span><span class="n">execute</span><span class="p">(</span><span class="s2">&quot;SELECT titre FROM concerts&quot;</span><span class="p">)</span>
+        <span class="n">concerts</span> <span class="o">=</span> <span class="n">cursor</span><span class="o">.</span><span class="n">fetchall</span><span class="p">()</span>
+
+        <span class="c1"># Ajout des boutons de siège avec les noms des concerts</span>
+        <span class="k">for</span> <span class="n">i</span><span class="p">,</span> <span class="n">concert</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">concerts</span><span class="p">):</span>
+            <span class="c1"># Calculer le nombre de lignes nécessaires pour centrer verticalement</span>
+            <span class="n">rows_needed</span> <span class="o">=</span> <span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">concerts</span><span class="p">)</span> <span class="o">-</span> <span class="mi">1</span><span class="p">)</span> <span class="o">//</span> <span class="mi">3</span> <span class="o">+</span> <span class="mi">1</span>
+            <span class="n">row</span> <span class="o">=</span> <span class="n">i</span> <span class="o">//</span> <span class="mi">3</span> <span class="o">+</span> <span class="mi">3</span>
+
+            <span class="c1"># Centrer horizontalement</span>
+            <span class="n">col</span> <span class="o">=</span> <span class="n">i</span> <span class="o">%</span> <span class="mi">3</span> <span class="o">+</span> <span class="mi">1</span> <span class="o">+</span> <span class="p">(</span><span class="mi">3</span> <span class="o">-</span> <span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">concerts</span><span class="p">)</span> <span class="o">%</span> <span class="mi">3</span> <span class="o">+</span> <span class="mi">1</span><span class="p">)</span> <span class="o">//</span> <span class="mi">2</span><span class="p">)</span>
+
+            <span class="n">seat_button</span> <span class="o">=</span> <span class="n">SeatButton</span><span class="p">(</span><span class="n">row</span> <span class="o">-</span> <span class="mi">2</span><span class="p">,</span> <span class="n">col</span><span class="p">,</span> <span class="n">concert</span><span class="p">[</span><span class="mi">0</span><span class="p">])</span>
+            <span class="n">seat_button</span><span class="o">.</span><span class="n">clicked</span><span class="o">.</span><span class="n">connect</span><span class="p">(</span><span class="n">partial</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">handle_concert_click</span><span class="p">,</span> <span class="n">concert</span><span class="p">[</span><span class="mi">0</span><span class="p">]))</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">seat_buttons</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">seat_button</span><span class="p">)</span>
+            <span class="n">layout</span><span class="o">.</span><span class="n">addWidget</span><span class="p">(</span><span class="n">seat_button</span><span class="p">,</span> <span class="n">row</span><span class="p">,</span> <span class="n">col</span><span class="p">)</span>
+
+        <span class="n">connection</span><span class="o">.</span><span class="n">close</span><span class="p">()</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">setLayout</span><span class="p">(</span><span class="n">layout</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">show</span><span class="p">()</span></div>
+
+<div class="viewcode-block" id="ReservationApp.show_login_dialog"><a class="viewcode-back" href="../content/code_application.html#reservation_app.ReservationApp.show_login_dialog">[docs]</a>    <span class="k">def</span> <span class="nf">show_login_dialog</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot; Lance la boîte de dialogue de connexion lorsque le bouton &#39;Se connecter&#39; est cliqué,</span>
+<span class="sd">        permettant la récupération des informations de l&#39;utilisateur depuis la base de données.</span>
+<span class="sd">        Vérifie si l&#39;utilisateur connecté est un administrateur et met à jour l&#39;interface utilisateur en conséquence.</span>
+<span class="sd">        Remplace le bouton &#39;Se connecter&#39; par &#39;Déconnexion&#39; si l&#39;utilisateur n&#39;est pas un administrateur.</span>
+
+<span class="sd">        :return: Aucun</span>
+<span class="sd">        :rtype: None</span>
+<span class="sd">        :raises: Aucune</span>
+
+<span class="sd">        :example:</span>
+
+<span class="sd">        .. code-block:: python</span>
+
+<span class="sd">        instance.show_login_dialog()</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">login_button</span><span class="o">.</span><span class="n">text</span><span class="p">()</span> <span class="o">==</span> <span class="s1">&#39;Se connecter&#39;</span><span class="p">:</span>
+            <span class="n">login_dialog</span> <span class="o">=</span> <span class="n">LoginDialog</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span>
+
+            <span class="k">if</span> <span class="n">login_dialog</span><span class="o">.</span><span class="n">exec_</span><span class="p">()</span> <span class="o">==</span> <span class="n">QDialog</span><span class="o">.</span><span class="n">Accepted</span><span class="p">:</span>
+                <span class="n">email</span> <span class="o">=</span> <span class="n">login_dialog</span><span class="o">.</span><span class="n">get_email</span><span class="p">()</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">current_user</span> <span class="o">=</span> <span class="n">email</span>  <span class="c1"># Stocke le nom de l&#39;utilisateur connecté pour après</span>
+                <span class="k">if</span> <span class="n">email</span> <span class="o">==</span> <span class="s1">&#39;admin@salle_concert.fr&#39;</span><span class="p">:</span>
+                    <span class="bp">self</span><span class="o">.</span><span class="n">show_admin_controls</span><span class="p">()</span>
+                <span class="k">else</span><span class="p">:</span>
+                    <span class="bp">self</span><span class="o">.</span><span class="n">username_label</span><span class="o">.</span><span class="n">setText</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Connecté en tant que </span><span class="si">{</span><span class="n">email</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+                    <span class="bp">self</span><span class="o">.</span><span class="n">login_button</span><span class="o">.</span><span class="n">setText</span><span class="p">(</span><span class="s1">&#39;Déconnexion&#39;</span><span class="p">)</span>
+                    <span class="bp">self</span><span class="o">.</span><span class="n">create_account_button</span><span class="o">.</span><span class="n">setVisible</span><span class="p">(</span><span class="kc">False</span><span class="p">)</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">logout</span><span class="p">()</span></div>
+
+<div class="viewcode-block" id="ReservationApp.show_admin_controls"><a class="viewcode-back" href="../content/code_application.html#reservation_app.ReservationApp.show_admin_controls">[docs]</a>    <span class="k">def</span> <span class="nf">show_admin_controls</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Affiche l&#39;interface d&#39;administration lorsque l&#39;administrateur se connecte.</span>
+
+<span class="sd">        :return: Aucun</span>
+<span class="sd">        :rtype: None</span>
+<span class="sd">        :raises: Aucune</span>
+
+<span class="sd">        :example:</span>
+
+<span class="sd">        .. code-block:: python</span>
+
+<span class="sd">            instance.show_admin_controls()</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">username_label</span><span class="o">.</span><span class="n">setText</span><span class="p">(</span><span class="s2">&quot;Connecté en tant qu&#39;Admin&quot;</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">login_button</span><span class="o">.</span><span class="n">setText</span><span class="p">(</span><span class="s1">&#39;Déconnexion&#39;</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">create_account_button</span><span class="o">.</span><span class="n">setVisible</span><span class="p">(</span><span class="kc">False</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">manage_database_button</span><span class="o">.</span><span class="n">setVisible</span><span class="p">(</span><span class="kc">True</span><span class="p">)</span></div>
+
+<div class="viewcode-block" id="ReservationApp.manage_database"><a class="viewcode-back" href="../content/code_application.html#reservation_app.ReservationApp.manage_database">[docs]</a>    <span class="k">def</span> <span class="nf">manage_database</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Lance l&#39;interface de gestion de la base de données pour l&#39;administrateur.</span>
+
+<span class="sd">        :return: Aucun</span>
+<span class="sd">        :rtype: None</span>
+<span class="sd">        :raises: Aucune</span>
+
+<span class="sd">        :example:</span>
+
+<span class="sd">        .. code-block:: python</span>
+
+<span class="sd">            instance.manage_database()</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">subprocess</span><span class="o">.</span><span class="n">run</span><span class="p">([</span><span class="s1">&#39;python3&#39;</span><span class="p">,</span> <span class="s1">&#39;/home/etudiant/SAE_Prog/SalleConcert/SalleConcert/gestion_graphique/main.py&#39;</span><span class="p">])</span></div>
+
+<div class="viewcode-block" id="ReservationApp.launch_create_account_script"><a class="viewcode-back" href="../content/code_application.html#reservation_app.ReservationApp.launch_create_account_script">[docs]</a>    <span class="k">def</span> <span class="nf">launch_create_account_script</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Lance l&#39;interface de création de compte dans la base de données.</span>
+
+<span class="sd">        :return: Aucun</span>
+<span class="sd">        :rtype: None</span>
+<span class="sd">        :raises: Aucune</span>
+
+<span class="sd">        :example:</span>
+
+<span class="sd">        .. code-block:: python</span>
+
+<span class="sd">            instance.manage_database()</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">subprocess</span><span class="o">.</span><span class="n">run</span><span class="p">([</span><span class="s1">&#39;python3&#39;</span><span class="p">,</span> <span class="s1">&#39;/home/etudiant/SAE_Prog/SalleConcert/SalleConcert/application/creation_compte.py&#39;</span><span class="p">])</span></div>
+
+<div class="viewcode-block" id="ReservationApp.logout"><a class="viewcode-back" href="../content/code_application.html#reservation_app.ReservationApp.logout">[docs]</a>    <span class="k">def</span> <span class="nf">logout</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Permet la déconnexion d&#39;un utilisateur lorsqu&#39;il est connecté.</span>
+
+<span class="sd">        :return: Aucun</span>
+<span class="sd">        :rtype: None</span>
+<span class="sd">        :raises: Aucune</span>
+
+<span class="sd">        :example:</span>
+
+<span class="sd">        .. code-block:: python</span>
+
+<span class="sd">            instance.logout()</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">username_label</span><span class="o">.</span><span class="n">clear</span><span class="p">()</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">login_button</span><span class="o">.</span><span class="n">setText</span><span class="p">(</span><span class="s1">&#39;Se connecter&#39;</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">create_account_button</span><span class="o">.</span><span class="n">setVisible</span><span class="p">(</span><span class="kc">True</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">manage_database_button</span><span class="o">.</span><span class="n">setVisible</span><span class="p">(</span><span class="kc">False</span><span class="p">)</span></div>
+
+<div class="viewcode-block" id="ReservationApp.handle_concert_click"><a class="viewcode-back" href="../content/code_application.html#reservation_app.ReservationApp.handle_concert_click">[docs]</a>    <span class="k">def</span> <span class="nf">handle_concert_click</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">concert_name</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Fonction appelée lorsqu&#39;un bouton de concert est cliqué.</span>
+
+<span class="sd">        :param concert_name: Le nom du concert cliqué.</span>
+<span class="sd">        :type concert_name: str</span>
+<span class="sd">        :return: Aucun</span>
+<span class="sd">        :rtype: None</span>
+<span class="sd">        :raises: Aucune</span>
+
+<span class="sd">        :example:</span>
+
+<span class="sd">        .. code-block:: python</span>
+
+<span class="sd">            instance.handle_concert_click(&quot;Nom du concert&quot;)</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">login_button</span><span class="o">.</span><span class="n">text</span><span class="p">()</span> <span class="o">==</span> <span class="s1">&#39;Déconnexion&#39;</span><span class="p">:</span>
+            <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Concert </span><span class="si">{</span><span class="n">concert_name</span><span class="si">}</span><span class="s2"> is clicked by </span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">current_user</span><span class="si">}</span><span class="s2">.&quot;</span><span class="p">)</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">QMessageBox</span><span class="o">.</span><span class="n">warning</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="s1">&#39;Erreur&#39;</span><span class="p">,</span> <span class="s1">&#39;Vous devez être connecté !&#39;</span><span class="p">)</span></div></div>
+</pre></div>
+
+           </div>
+          </div>
+          <footer>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2023, ..</p>
+  </div>
+
+  Compilé avec <a href="https://www.sphinx-doc.org/">Sphinx</a> en utilisant un
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">thème</a>
+    fourni par <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

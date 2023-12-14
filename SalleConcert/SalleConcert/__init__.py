@@ -1,4 +1,4 @@
-""" Salle Concert.
+""" SalleConcert.
 
 .. moduleauthor:: Bauwens Matthieu <matthieu.bauwens@etu.univ-poitiers.fr>
 
