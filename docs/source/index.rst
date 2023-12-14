@@ -15,7 +15,7 @@ Navigation :
 
 
 .. toctree::
-   :caption: Présentation:
+   :caption: Contenu:
 
    content/code
 
