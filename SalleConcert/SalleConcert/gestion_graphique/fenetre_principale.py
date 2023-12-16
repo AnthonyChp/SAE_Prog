@@ -8,7 +8,8 @@
 
 """
 
-from PyQt5.QtWidgets import QMainWindow, QWidget, QMessageBox, QVBoxLayout, QTabWidget, QPushButton, QTableWidget, QTableWidgetItem
+from PyQt5.QtWidgets import QMainWindow, QWidget, QMessageBox, QVBoxLayout, QTabWidget, QPushButton, QTableWidget, QTableWidgetItem, QToolBar, QAction
+from PyQt5.QtGui import QIcon
 
 from modif_spectateurs import ModifSpectateurs
 from modif_concerts import ModifConcerts
@@ -61,12 +62,49 @@ class AppGestion(QMainWindow):
         self.onglet1 = QWidget()
         self.onglets.addTab(self.onglet1, "Table Spectateurs")
         self.onglet1_layout = QVBoxLayout(self.onglet1)
+
+
+        # Ajout de barre d'outils avec racourcis
+
+        self.toolbar_spectateurs = QToolBar(self)
+        self.addToolBar(self.toolbar_spectateurs)
+
+        # rafraichir
+        self.action_refreshs = QAction(QIcon.fromTheme('view-refresh'), 'Rafraîchir', self)
+
+        self.action_refreshs.triggered.connect(self.refresh_donnees_spectateurs)
+        self.toolbar_spectateurs.addAction(self.action_refreshs)
+
+        # ajouter
+        self.action_ajouts = QAction(QIcon.fromTheme('list-add'), 'Ajouter', self)
+        self.action_ajouts.triggered.connect(self.ajout_spectateurs)
+        self.toolbar_spectateurs.addAction(self.action_ajouts)
+
+        # modifier
+        self.action_modifs = QAction(QIcon.fromTheme('document-edit'), 'Modifier', self)
+        self.action_modifs.triggered.connect(self.modif_donnees_spectateurs)
+        self.toolbar_spectateurs.addAction(self.action_modifs)
+
+        # supprimer
+        self.action_supps = QAction(QIcon.fromTheme('edit-delete'), 'Supprimer', self)
+        self.action_supps.triggered.connect(self.supp_spectateurs)
+        self.toolbar_spectateurs.addAction(self.action_supps)
+
+        self.onglet1_layout.addWidget(self.toolbar_spectateurs)
+
+
+
         self.table_spectateurs = QTableWidget()
         self.onglet1_layout.addWidget(self.table_spectateurs)
+            # boutons
         self.bouton_refresh_spectateurs = QPushButton("Rafraîchir")
+        self.bouton_refresh_spectateurs.setStyleSheet('background-color: #3498db; color: #000000;')
         self.bouton_ajout_spectateurs = QPushButton("Ajouter un spectateur")
+        self.bouton_ajout_spectateurs.setStyleSheet('background-color: #009919; color: #000000;')
         self.bouton_modif_spectateurs = QPushButton("Modifier la ligne")
+        self.bouton_modif_spectateurs.setStyleSheet('background-color: #ff8b00; color: #000000;')
         self.bouton_supp_spectateurs = QPushButton("Supprimer la ligne")
+        self.bouton_supp_spectateurs.setStyleSheet('background-color: #fc0d0d; color: #000000;')
         self.onglet1_layout.addWidget(self.bouton_refresh_spectateurs)
         self.onglet1_layout.addWidget(self.bouton_ajout_spectateurs)
         self.onglet1_layout.addWidget(self.bouton_modif_spectateurs)
@@ -77,12 +115,50 @@ class AppGestion(QMainWindow):
         self.onglet2 = QWidget()
         self.onglets.addTab(self.onglet2, "Table Concerts")
         self.onglet2_layout = QVBoxLayout(self.onglet2)
+
+        # Ajout de barre d'outils avec racourcis
+
+        self.toolbar_concerts = QToolBar(self)
+        self.addToolBar(self.toolbar_concerts)
+
+        # rafraîchir
+        self.action_refreshc = QAction(QIcon.fromTheme('view-refresh'), 'Rafraîchir', self)
+        self.action_refreshc.triggered.connect(self.refresh_donnees_concerts)
+        self.toolbar_concerts.addAction(self.action_refreshc)
+
+        # ajouter
+        self.action_ajoutc = QAction(QIcon.fromTheme('list-add'), 'Ajouter', self)
+        self.action_ajoutc.triggered.connect(self.ajout_concerts)
+        self.toolbar_concerts.addAction(self.action_ajoutc)
+
+        # modifier
+        self.action_modifc = QAction(QIcon.fromTheme('document-edit'), 'Modifier', self)
+        self.action_modifc.triggered.connect(self.modif_donnees_concerts)
+        self.toolbar_concerts.addAction(self.action_modifc)
+
+        # supprimer
+        self.action_suppc = QAction(QIcon.fromTheme('edit-delete'), 'Supprimer', self)
+        self.action_suppc.triggered.connect(self.supp_concerts)
+        self.toolbar_concerts.addAction(self.action_suppc)
+
+        self.onglet2_layout.addWidget(self.toolbar_concerts)
+
+
+
         self.table_concerts = QTableWidget()
         self.onglet2_layout.addWidget(self.table_concerts)
+
+            # boutons
         self.bouton_refresh_concerts = QPushButton("Rafraîchir")
+        self.bouton_refresh_concerts.setStyleSheet('background-color: #3498db; color: #000000;')
         self.bouton_ajout_concerts = QPushButton("Ajouter un concert")
+        self.bouton_ajout_concerts.setStyleSheet('background-color: #009919; color: #000000;')
         self.bouton_modif_concerts = QPushButton("Modifier la ligne")
+        self.bouton_modif_concerts.setStyleSheet('background-color: #ff8b00; color: #000000;')
         self.bouton_supp_concerts = QPushButton("Supprimer la ligne")
+        self.bouton_supp_concerts.setStyleSheet('background-color: #fc0d0d; color: #000000;')
+
+
         self.onglet2_layout.addWidget(self.bouton_refresh_concerts)
         self.onglet2_layout.addWidget(self.bouton_ajout_concerts)
         self.onglet2_layout.addWidget(self.bouton_modif_concerts)
@@ -111,11 +187,9 @@ class AppGestion(QMainWindow):
         Rafraîchit la table des spectateurs en récupérant les données de la base de données.
         """
 
-        # Fetch data from the database
         query = "SELECT * FROM spectateurs"
         data = self.donnees_spectateurs.recup_donnees_spectateurs(query)
 
-        # Populate the table with the fetched data
         self.table_spectateurs.setRowCount(0)
         self.table_spectateurs.setColumnCount(len(data[0]))
         self.table_spectateurs.setHorizontalHeaderLabels([str(header[0]) for header in self.donnees_spectateurs.cursor.description])
@@ -181,11 +255,9 @@ class AppGestion(QMainWindow):
         Rafraîchit la table des concerts en récupérant les données de la base de données.
         """
 
-        # Fetch data from the database
         query = "SELECT * FROM concerts"
         data = self.donnees_concerts.recup_donnees_concerts(query)
 
-        # Populate the table with the fetched data
         self.table_concerts.setRowCount(0)
         self.table_concerts.setColumnCount(len(data[0]))
         self.table_concerts.setHorizontalHeaderLabels([str(header[0]) for header in self.donnees_concerts.cursor.description])
@@ -230,8 +302,6 @@ class AppGestion(QMainWindow):
                                                QMessageBox.Yes | QMessageBox.No)
 
             if confirmation == QMessageBox.Yes:
-                # Supprimer la ligne sélectionnée
-                
 
                                 # Récupérer l'ID de la ligne sélectionnée
                 id_a_supprimer = self.table_concerts.item(selected_row, 0).text()
