@@ -17,7 +17,7 @@ from functools import partial
 import sys
 
 class ReservationApp(QWidget):
-	"""
+    """
     Classe principale de l'application de réservation de concerts.
 
     Cette classe gère l'interface utilisateur, la connexion/déconnexion des utilisateurs,
@@ -33,13 +33,9 @@ class ReservationApp(QWidget):
         app_instance = ReservationApp()
         app_instance.show()
     """
-    current_user = None  # Variable de classe pour stocker le nom de l'utilisateur connecté
     def __init__(self):
         super().__init__()
-
         self.init_ui()
-
-        
 
     def init_ui(self):
         """Initialise l'interface utilisateur de l'application, mettant en place l'affichage de base.
@@ -55,10 +51,6 @@ class ReservationApp(QWidget):
             instance.init_ui()
         """
         self.setWindowTitle('Réservation de Concert')
-        
-        
-
-        #--- Création de tous nos boutons ---#
 
         self.login_button = QPushButton('Se connecter')
         self.login_button.clicked.connect(self.show_login_dialog)
@@ -72,33 +64,20 @@ class ReservationApp(QWidget):
 
         self.username_label = QLabel()
 
-        #------------------------------------#
-        
-        
-        #--- Création de tous nos layout pour placer nos boutons ---#
-
-
         layout = QGridLayout()
         layout.setSpacing(50)
-      
 
-        row_count = 6  # Nombre total de lignes dans la grille
-        layout.setRowStretch(4, 1)  # Ligne vide au-dessus pour déplacer les boutons plus haut
-        layout.setRowStretch(row_count, 1)  # Ligne vide en dessous pour l'espacement
+        row_count = 6
+        layout.setRowStretch(4, 1)
+        layout.setRowStretch(row_count, 1)
 
-        # Ajout des boutons "Se connecter" et "Créer un compte"
         layout.addWidget(self.login_button, 0, 1, 1, 5, alignment=Qt.AlignTop | Qt.AlignLeft)
         layout.addWidget(self.create_account_button, 0, 6, 1, 5, alignment=Qt.AlignTop | Qt.AlignRight)
         layout.addWidget(self.manage_database_button, 0, 6, 1, 5, alignment=Qt.AlignTop | Qt.AlignRight)
-        layout.addWidget(self.username_label, 2, 1, 1, 10)  # Réorganiser l'emplacement du label
-        
+        layout.addWidget(self.username_label, 2, 1, 1, 10)
 
         self.seat_buttons = []
-      
-        #-----------------------------------------------------------#
 
-        # Connexion à la base de donnée
-                # Connexion à la base de donnée
         connection = mysql.connector.connect(
             host='localhost',
             user='admin',
@@ -107,46 +86,40 @@ class ReservationApp(QWidget):
         )
         cursor = connection.cursor()
 
-        # Permet de récupérer les concerts de la base de données avec leurs tarifs
         cursor.execute("SELECT id, titre, tarif FROM concerts")
         concerts = cursor.fetchall()
 
-        layout.setRowStretch(0, 1)  # Ligne vide au-dessus pour déplacer les boutons plus haut
-        layout.setRowStretch(row_count, 1)  # Ligne vide en dessous pour l'espacement
+        layout.setRowStretch(0, 1)
+        layout.setRowStretch(row_count, 1)
 
-        # Ajout des boutons de siège avec les noms des concerts et leurs tarifs
         for i, concert in enumerate(concerts):
-            # Calculer le nombre de lignes nécessaires pour centrer verticalement
             rows_needed = (len(concerts) - 1) // 3 + 1
             row = i // 3 + 1
-            
-            # Calculer la colonne pour centrer horizontalement
             col = i % 3 + 1 + (3 - (len(concerts) % 3 + 1) // 2)
 
-            concert_info = f"{concert[1]}\nTarif: {concert[2]}"  # Combinaison du nom du concert et du tarif
+            concert_info = f"{concert[1]}\nTarif: {concert[2]}"
             seat_button = QPushButton(concert_info)
-            layout.addWidget(seat_button, row + 2, col)  # Ajustement de la position en ligne
+            layout.addWidget(seat_button, row + 2, col)
 
-            # Définir la taille minimale pour créer des carrés
-            seat_button.setFixedSize(300, 300)  # Ajustez la taille en fonction de vos besoins
+            seat_button.setFixedSize(300, 300)
             seat_button.setStyleSheet(
                 '''
                 QPushButton {
-                    border-radius: 20px; /* Ajustez la valeur pour modifier le degré d'arrondi */
-                    border: 2px solid black; /* Optionnel : ajoute une bordure */
+                    border-radius: 20px;
+                    border: 2px solid black;
                 }
                 QPushButton:hover {
-                    background-color: lightgray; /* Change la couleur de fond au survol */
+                    background-color: lightgray;
                 }
                 '''
             )
-            if concert[0]==1:
+            if concert[0] == 1:
                 pixmap = QPixmap('SalleConcert/images/josman.jpg')
                 pixmap = pixmap.scaledToWidth(300)
                 icon = QIcon(pixmap)
                 seat_button.setIcon(icon)
                 seat_button.setIconSize(pixmap.size())
-            elif concert[0]==2:
+            elif concert[0] == 2:
                 pixmap = QPixmap('SalleConcert/images/kikesa.jpg')
                 pixmap = pixmap.scaledToWidth(300)
                 icon = QIcon(pixmap)
@@ -184,7 +157,7 @@ class ReservationApp(QWidget):
 
             if login_dialog.exec_() == QDialog.Accepted:
                 email = login_dialog.get_email()
-                self.current_user = email  # Stocke le nom de l'utilisateur connecté pour après
+                self.current_user = email
                 if email == 'admin@salle_concert.fr':
                     self.show_admin_controls()
                 else:
@@ -242,7 +215,6 @@ class ReservationApp(QWidget):
         """
         subprocess.run(['python3', '/home/etudiant/Documents/SAE_Prog/SalleConcert/SalleConcert/application/creation_compte.py'])
 
-
     def logout(self):
         """Permet la déconnexion d'un utilisateur lorsqu'il est connecté.
 
@@ -280,4 +252,3 @@ class ReservationApp(QWidget):
             print(f"Concert {concert_name} is clicked by {self.current_user}.")
         else:
             QMessageBox.warning(self, 'Erreur', 'Vous devez être connecté !')
-
