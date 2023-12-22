@@ -1,14 +1,14 @@
 import sys
-from PyQt5.QtWidgets import QApplication, QWidget, QGridLayout, QPushButton, QVBoxLayout, QLabel, QLineEdit, QMessageBox
+from PyQt5.QtWidgets import QApplication, QWidget, QGridLayout, QPushButton, QVBoxLayout, QLabel, QMessageBox, QLineEdit
 from PyQt5.QtGui import QPixmap, QIcon
 from PyQt5.QtCore import Qt
 import os 
 import mysql.connector
 
+
 class SeatWindow(QWidget):
-    def __init__(self, current_user):
+    def __init__(self):
         super().__init__()
-        self.current_user = current_user
         self.initUI()
 
     def initUI(self):
@@ -16,60 +16,53 @@ class SeatWindow(QWidget):
         self.selected_seats = []
         self.setGeometry(100, 100, 400, 400)
 
-        # Use absolute path to load the image
-        current_directory = os.path.dirname(os.path.realpath(__file__))
-        image_path = os.path.join(current_directory, 'images', 'siege.png')
+        main_layout = QVBoxLayout()
+        self.setLayout(main_layout)
 
         grid_layout = QGridLayout()
-        self.setLayout(grid_layout)
+        main_layout.addLayout(grid_layout)
 
         for i in range(5):
             for j in range(5):
                 seat_btn = QPushButton(f"{chr(65 + i)}-{j + 1}")
-
-                # Set the icon using absolute path
-                pixmap = QPixmap(image_path)
-                seat_btn.setIcon(QIcon(pixmap))
+                pixmap = QPixmap('../images/siege.png')
+                pixmap = pixmap.scaledToWidth(50)
+                icon = QIcon(pixmap)
+                seat_btn.setIcon(icon)
                 seat_btn.setIconSize(pixmap.size())
-
                 seat_btn.setCheckable(True)  
                 seat_btn.clicked.connect(self.on_seat_selected) 
                 grid_layout.addWidget(seat_btn, i, j)
 
-        validate_btn = QPushButton("Valider")
-        validate_btn.clicked.connect(self.save_selected_seats)  
-        grid_layout.addWidget(validate_btn, 6, 0, 1, 5)  
-
-        # Add QLineEdit widgets for name and email
+        # Ajouter des champs de texte pour le nom et l'email
         self.name_edit = QLineEdit()
         self.email_edit = QLineEdit()
+        main_layout.addWidget(QLabel("Nom:"))
+        main_layout.addWidget(self.name_edit)
+        main_layout.addWidget(QLabel("Email:"))
+        main_layout.addWidget(self.email_edit)
 
-        grid_layout.addWidget(QLabel("Nom:"), 7, 0)
-        grid_layout.addWidget(self.name_edit, 7, 1, 1, 4)
-        grid_layout.addWidget(QLabel("Email:"), 8, 0)
-        grid_layout.addWidget(self.email_edit, 8, 1, 1, 4)
+        validate_btn = QPushButton("Valider")
+        validate_btn.clicked.connect(self.save_selected_seats)
+        main_layout.addWidget(validate_btn)
 
         self.show()
 
-    def set_current_user(self, current_user):
-        self.current_user = current_user
-        print('a')
-
     def on_seat_selected(self):
-        seat_btn = self.sender()  # Récupérer le bouton qui a déclenché le signal
+        seat_btn = self.sender()
 
-        if seat_btn.isChecked():  # Vérifier si le bouton est coché (sélectionné)
-            seat_btn.setStyleSheet("border: 2px solid green;")  # Changer le style du bouton
+        if seat_btn.isChecked():
+            seat_btn.setStyleSheet("border: 2px solid green;")
             seat_name = seat_btn.text()
             if seat_name not in self.selected_seats:
-                self.selected_seats.append(seat_name)  # Ajouter le siège à la liste des sièges sélectionnés
+                self.selected_seats.append(seat_name)
         else:
-            seat_btn.setStyleSheet("")  # Réinitialiser le style du bouton
+            seat_btn.setStyleSheet("")
             seat_name = seat_btn.text()
             if seat_name in self.selected_seats:
-                self.selected_seats.remove(seat_name)  # Enlever le siège de la liste des sièges sélectionnés
+                self.selected_seats.remove(seat_name)
 
-        print("Sièges sélectionnés :", self.selected_seats)  # Afficher les sièges sélectionnés dans la console
+        print("Sièges sélectionnés :", self.selected_seats)
 
     def save_selected_seats(self):
         if not self.selected_seats:
@@ -103,10 +96,14 @@ class SeatWindow(QWidget):
 
         QMessageBox.information(self, "Information", "Sièges enregistrés avec succès!")
 
+
 def main():
     app = QApplication(sys.argv)
+    current_directory = os.path.dirname(os.path.realpath(__file__))
+    os.chdir(os.path.join(current_directory, "..", "images"))
     seat_window = SeatWindow()
     sys.exit(app.exec_())
+
 
 if __name__ == '__main__':
     main()

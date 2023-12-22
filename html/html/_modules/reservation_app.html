@@ -40,7 +40,7 @@
         </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
               <p class="caption" role="heading"><span class="caption-text">Contenu:</span></p>
 <ul>
-<li class="toctree-l1"><a class="reference internal" href="../content/code.html">Documentation du code</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../content/code.html">Présentation</a></li>
 </ul>
 <p class="caption" role="heading"><span class="caption-text">Application principale</span></p>
 <ul>
@@ -84,15 +84,16 @@
 <span class="sd">.. moduleauthor:: Chapus Anthony &lt;anthony.chapus1002@etu.univ-poitiers.fr&gt;</span>
 
 <span class="sd">&quot;&quot;&quot;</span>
-
-<span class="kn">from</span> <span class="nn">PyQt5.QtWidgets</span> <span class="kn">import</span> <span class="n">QWidget</span><span class="p">,</span> <span class="n">QPushButton</span><span class="p">,</span> <span class="n">QLabel</span><span class="p">,</span> <span class="n">QGridLayout</span><span class="p">,</span> <span class="n">QDialog</span><span class="p">,</span> <span class="n">QApplication</span><span class="p">,</span> <span class="n">QMessageBox</span>
+<span class="kn">from</span> <span class="nn">PyQt5.QtWidgets</span> <span class="kn">import</span> <span class="n">QWidget</span><span class="p">,</span> <span class="n">QPushButton</span><span class="p">,</span> <span class="n">QLabel</span><span class="p">,</span> <span class="n">QGridLayout</span><span class="p">,</span> <span class="n">QDialog</span><span class="p">,</span> <span class="n">QMessageBox</span><span class="p">,</span> <span class="n">QApplication</span>
 <span class="kn">import</span> <span class="nn">mysql.connector</span>
 <span class="kn">import</span> <span class="nn">subprocess</span>
 <span class="kn">from</span> <span class="nn">login_dialog</span> <span class="kn">import</span> <span class="n">LoginDialog</span>
 <span class="kn">from</span> <span class="nn">seat_button</span> <span class="kn">import</span> <span class="n">SeatButton</span>
 <span class="kn">from</span> <span class="nn">PyQt5.QtCore</span> <span class="kn">import</span> <span class="n">Qt</span>
-<span class="kn">import</span> <span class="nn">sys</span>
+<span class="kn">from</span> <span class="nn">PyQt5.QtGui</span> <span class="kn">import</span> <span class="n">QPixmap</span><span class="p">,</span> <span class="n">QIcon</span>
 <span class="kn">from</span> <span class="nn">functools</span> <span class="kn">import</span> <span class="n">partial</span>
+<span class="kn">import</span> <span class="nn">sys</span>
+<span class="kn">from</span> <span class="nn">script_siege</span> <span class="kn">import</span> <span class="n">SeatWindow</span>
 
 <div class="viewcode-block" id="ReservationApp"><a class="viewcode-back" href="../content/code_application.html#reservation_app.ReservationApp">[docs]</a><span class="k">class</span> <span class="nc">ReservationApp</span><span class="p">(</span><span class="n">QWidget</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
@@ -111,11 +112,8 @@
 <span class="sd">        app_instance = ReservationApp()</span>
 <span class="sd">        app_instance.show()</span>
 <span class="sd">    &quot;&quot;&quot;</span>
-    <span class="n">current_user</span> <span class="o">=</span> <span class="kc">None</span>  <span class="c1"># Variable de classe pour stocker le nom de l&#39;utilisateur connecté</span>
-
     <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">()</span>
-
         <span class="bp">self</span><span class="o">.</span><span class="n">init_ui</span><span class="p">()</span>
 
 <div class="viewcode-block" id="ReservationApp.init_ui"><a class="viewcode-back" href="../content/code_application.html#reservation_app.ReservationApp.init_ui">[docs]</a>    <span class="k">def</span> <span class="nf">init_ui</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
@@ -132,11 +130,9 @@
 <span class="sd">            instance.init_ui()</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">setWindowTitle</span><span class="p">(</span><span class="s1">&#39;Réservation de Concert&#39;</span><span class="p">)</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">showMaximized</span><span class="p">()</span>  <span class="c1"># Met la fenêtre à la taille de l&#39;écran</span>
-
-        <span class="c1"># --- Création de tous nos boutons ---#</span>
 
         <span class="bp">self</span><span class="o">.</span><span class="n">login_button</span> <span class="o">=</span> <span class="n">QPushButton</span><span class="p">(</span><span class="s1">&#39;Se connecter&#39;</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">login_button</span><span class="o">.</span><span class="n">setStyleSheet</span><span class="p">(</span><span class="s1">&#39;background-color: #009919;&#39;</span><span class="p">)</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">login_button</span><span class="o">.</span><span class="n">clicked</span><span class="o">.</span><span class="n">connect</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">show_login_dialog</span><span class="p">)</span>
 
         <span class="bp">self</span><span class="o">.</span><span class="n">create_account_button</span> <span class="o">=</span> <span class="n">QPushButton</span><span class="p">(</span><span class="s1">&#39;Créer un compte&#39;</span><span class="p">)</span>
@@ -148,22 +144,19 @@
 
         <span class="bp">self</span><span class="o">.</span><span class="n">username_label</span> <span class="o">=</span> <span class="n">QLabel</span><span class="p">()</span>
 
-        <span class="c1"># ------------------------------------#</span>
-
-        <span class="c1"># --- Création de tous nos layout pour placer nos boutons ---#</span>
-
         <span class="n">layout</span> <span class="o">=</span> <span class="n">QGridLayout</span><span class="p">()</span>
+        <span class="n">layout</span><span class="o">.</span><span class="n">setSpacing</span><span class="p">(</span><span class="mi">50</span><span class="p">)</span>
 
-        <span class="n">layout</span><span class="o">.</span><span class="n">addWidget</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">login_button</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">5</span><span class="p">,</span> <span class="n">alignment</span><span class="o">=</span><span class="n">Qt</span><span class="o">.</span><span class="n">AlignTop</span> <span class="o">|</span> <span class="n">Qt</span><span class="o">.</span><span class="n">AlignLeft</span><span class="p">)</span>
-        <span class="n">layout</span><span class="o">.</span><span class="n">addWidget</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">create_account_button</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">6</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">5</span><span class="p">,</span> <span class="n">alignment</span><span class="o">=</span><span class="n">Qt</span><span class="o">.</span><span class="n">AlignTop</span> <span class="o">|</span> <span class="n">Qt</span><span class="o">.</span><span class="n">AlignRight</span><span class="p">)</span>
-        <span class="n">layout</span><span class="o">.</span><span class="n">addWidget</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">manage_database_button</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">6</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">5</span><span class="p">,</span> <span class="n">alignment</span><span class="o">=</span><span class="n">Qt</span><span class="o">.</span><span class="n">AlignTop</span> <span class="o">|</span> <span class="n">Qt</span><span class="o">.</span><span class="n">AlignRight</span><span class="p">)</span>
-        <span class="n">layout</span><span class="o">.</span><span class="n">addWidget</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">username_label</span><span class="p">,</span> <span class="mi">3</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">10</span><span class="p">)</span>
+        <span class="n">row_count</span> <span class="o">=</span> <span class="mi">6</span>
+        <span class="n">layout</span><span class="o">.</span><span class="n">setRowStretch</span><span class="p">(</span><span class="mi">4</span><span class="p">,</span> <span class="mi">1</span><span class="p">)</span>
+        <span class="n">layout</span><span class="o">.</span><span class="n">setRowStretch</span><span class="p">(</span><span class="n">row_count</span><span class="p">,</span> <span class="mi">1</span><span class="p">)</span>
 
-        <span class="bp">self</span><span class="o">.</span><span class="n">seat_buttons</span> <span class="o">=</span> <span class="p">[]</span>
+        <span class="n">layout</span><span class="o">.</span><span class="n">addWidget</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">login_button</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">5</span><span class="p">,</span> <span class="n">alignment</span><span class="o">=</span><span class="n">Qt</span><span class="o">.</span><span class="n">AlignTop</span> <span class="o">|</span> <span class="n">Qt</span><span class="o">.</span><span class="n">AlignLeft</span><span class="p">)</span>
+        <span class="n">layout</span><span class="o">.</span><span class="n">addWidget</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">create_account_button</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">6</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">5</span><span class="p">,</span> <span class="n">alignment</span><span class="o">=</span><span class="n">Qt</span><span class="o">.</span><span class="n">AlignTop</span> <span class="o">|</span> <span class="n">Qt</span><span class="o">.</span><span class="n">AlignRight</span><span class="p">)</span>
+        <span class="n">layout</span><span class="o">.</span><span class="n">addWidget</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">manage_database_button</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">6</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">5</span><span class="p">,</span> <span class="n">alignment</span><span class="o">=</span><span class="n">Qt</span><span class="o">.</span><span class="n">AlignTop</span> <span class="o">|</span> <span class="n">Qt</span><span class="o">.</span><span class="n">AlignRight</span><span class="p">)</span>
+        <span class="n">layout</span><span class="o">.</span><span class="n">addWidget</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">username_label</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">10</span><span class="p">)</span>
 
-        <span class="c1"># -----------------------------------------------------------#</span>
 
-        <span class="c1"># Connexion à la base de données</span>
         <span class="n">connection</span> <span class="o">=</span> <span class="n">mysql</span><span class="o">.</span><span class="n">connector</span><span class="o">.</span><span class="n">connect</span><span class="p">(</span>
             <span class="n">host</span><span class="o">=</span><span class="s1">&#39;localhost&#39;</span><span class="p">,</span>
             <span class="n">user</span><span class="o">=</span><span class="s1">&#39;admin&#39;</span><span class="p">,</span>
@@ -172,28 +165,59 @@
         <span class="p">)</span>
         <span class="n">cursor</span> <span class="o">=</span> <span class="n">connection</span><span class="o">.</span><span class="n">cursor</span><span class="p">()</span>
 
-        <span class="c1"># Permet de récupérer les concerts de la base de données</span>
-        <span class="n">cursor</span><span class="o">.</span><span class="n">execute</span><span class="p">(</span><span class="s2">&quot;SELECT titre FROM concerts&quot;</span><span class="p">)</span>
+        <span class="n">cursor</span><span class="o">.</span><span class="n">execute</span><span class="p">(</span><span class="s2">&quot;SELECT id, artiste, tarif, date FROM concerts&quot;</span><span class="p">)</span>
         <span class="n">concerts</span> <span class="o">=</span> <span class="n">cursor</span><span class="o">.</span><span class="n">fetchall</span><span class="p">()</span>
 
-        <span class="c1"># Ajout des boutons de siège avec les noms des concerts</span>
+        <span class="n">layout</span><span class="o">.</span><span class="n">setRowStretch</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">)</span>
+        <span class="n">layout</span><span class="o">.</span><span class="n">setRowStretch</span><span class="p">(</span><span class="n">row_count</span><span class="p">,</span> <span class="mi">1</span><span class="p">)</span>
+
         <span class="k">for</span> <span class="n">i</span><span class="p">,</span> <span class="n">concert</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">concerts</span><span class="p">):</span>
-            <span class="c1"># Calculer le nombre de lignes nécessaires pour centrer verticalement</span>
-            <span class="n">rows_needed</span> <span class="o">=</span> <span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">concerts</span><span class="p">)</span> <span class="o">-</span> <span class="mi">1</span><span class="p">)</span> <span class="o">//</span> <span class="mi">3</span> <span class="o">+</span> <span class="mi">1</span>
-            <span class="n">row</span> <span class="o">=</span> <span class="n">i</span> <span class="o">//</span> <span class="mi">3</span> <span class="o">+</span> <span class="mi">3</span>
-
-            <span class="c1"># Centrer horizontalement</span>
+            <span class="n">row</span> <span class="o">=</span> <span class="n">i</span> <span class="o">//</span> <span class="mi">3</span> <span class="o">+</span> <span class="mi">1</span>
             <span class="n">col</span> <span class="o">=</span> <span class="n">i</span> <span class="o">%</span> <span class="mi">3</span> <span class="o">+</span> <span class="mi">1</span> <span class="o">+</span> <span class="p">(</span><span class="mi">3</span> <span class="o">-</span> <span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">concerts</span><span class="p">)</span> <span class="o">%</span> <span class="mi">3</span> <span class="o">+</span> <span class="mi">1</span><span class="p">)</span> <span class="o">//</span> <span class="mi">2</span><span class="p">)</span>
+            <span class="n">concert_info</span> <span class="o">=</span> <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">concert</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span><span class="si">}</span><span class="se">\n</span><span class="si">{</span><span class="n">concert</span><span class="p">[</span><span class="mi">2</span><span class="p">]</span><span class="si">}</span><span class="s2">€</span><span class="se">\n</span><span class="si">{</span><span class="n">concert</span><span class="p">[</span><span class="mi">3</span><span class="p">]</span><span class="si">}</span><span class="s2">&quot;</span>
+            <span class="n">seat_button</span> <span class="o">=</span> <span class="n">QPushButton</span><span class="p">(</span><span class="n">concert_info</span><span class="p">)</span>
+            <span class="n">layout</span><span class="o">.</span><span class="n">addWidget</span><span class="p">(</span><span class="n">seat_button</span><span class="p">,</span> <span class="n">row</span> <span class="p">,</span> <span class="n">col</span><span class="p">)</span>
 
-            <span class="n">seat_button</span> <span class="o">=</span> <span class="n">SeatButton</span><span class="p">(</span><span class="n">row</span> <span class="o">-</span> <span class="mi">2</span><span class="p">,</span> <span class="n">col</span><span class="p">,</span> <span class="n">concert</span><span class="p">[</span><span class="mi">0</span><span class="p">])</span>
-            <span class="n">seat_button</span><span class="o">.</span><span class="n">clicked</span><span class="o">.</span><span class="n">connect</span><span class="p">(</span><span class="n">partial</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">handle_concert_click</span><span class="p">,</span> <span class="n">concert</span><span class="p">[</span><span class="mi">0</span><span class="p">]))</span>
-            <span class="bp">self</span><span class="o">.</span><span class="n">seat_buttons</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">seat_button</span><span class="p">)</span>
-            <span class="n">layout</span><span class="o">.</span><span class="n">addWidget</span><span class="p">(</span><span class="n">seat_button</span><span class="p">,</span> <span class="n">row</span><span class="p">,</span> <span class="n">col</span><span class="p">)</span>
+            <span class="n">seat_button</span><span class="o">.</span><span class="n">setFixedSize</span><span class="p">(</span><span class="mi">300</span><span class="p">,</span> <span class="mi">300</span><span class="p">)</span>
+            <span class="n">seat_button</span><span class="o">.</span><span class="n">setStyleSheet</span><span class="p">(</span>
+<span class="w">                </span><span class="sd">&#39;&#39;&#39;</span>
+<span class="sd">                QPushButton {</span>
+<span class="sd">                    border-radius: 20px;</span>
+<span class="sd">                    border: 2px solid black;</span>
+<span class="sd">                }</span>
+<span class="sd">                QPushButton:hover {</span>
+<span class="sd">                    background-color: lightgray;</span>
+<span class="sd">                }</span>
+<span class="sd">                &#39;&#39;&#39;</span>
+            <span class="p">)</span>
+
+            <span class="c1"># Ajout a chaque bouton sa propre fonction</span>
+            <span class="n">seat_button</span><span class="o">.</span><span class="n">clicked</span><span class="o">.</span><span class="n">connect</span><span class="p">(</span><span class="n">partial</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">concert_clique</span><span class="p">,</span> <span class="n">concert_info</span><span class="p">))</span>
+
+            <span class="k">if</span> <span class="n">concert</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">==</span> <span class="mi">1</span><span class="p">:</span>
+                <span class="n">pixmap</span> <span class="o">=</span> <span class="n">QPixmap</span><span class="p">(</span><span class="s1">&#39;SalleConcert/images/josman.jpg&#39;</span><span class="p">)</span>
+                <span class="n">pixmap</span> <span class="o">=</span> <span class="n">pixmap</span><span class="o">.</span><span class="n">scaledToWidth</span><span class="p">(</span><span class="mi">300</span><span class="p">)</span>
+                <span class="n">icon</span> <span class="o">=</span> <span class="n">QIcon</span><span class="p">(</span><span class="n">pixmap</span><span class="p">)</span>
+                <span class="n">seat_button</span><span class="o">.</span><span class="n">setIcon</span><span class="p">(</span><span class="n">icon</span><span class="p">)</span>
+                <span class="n">seat_button</span><span class="o">.</span><span class="n">setIconSize</span><span class="p">(</span><span class="n">pixmap</span><span class="o">.</span><span class="n">size</span><span class="p">())</span>
+            <span class="k">elif</span> <span class="n">concert</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">==</span> <span class="mi">2</span><span class="p">:</span>
+                <span class="n">pixmap</span> <span class="o">=</span> <span class="n">QPixmap</span><span class="p">(</span><span class="s1">&#39;SalleConcert/images/kikesa.jpg&#39;</span><span class="p">)</span>
+                <span class="n">pixmap</span> <span class="o">=</span> <span class="n">pixmap</span><span class="o">.</span><span class="n">scaledToWidth</span><span class="p">(</span><span class="mi">300</span><span class="p">)</span>
+                <span class="n">icon</span> <span class="o">=</span> <span class="n">QIcon</span><span class="p">(</span><span class="n">pixmap</span><span class="p">)</span>
+                <span class="n">seat_button</span><span class="o">.</span><span class="n">setIcon</span><span class="p">(</span><span class="n">icon</span><span class="p">)</span>
+                <span class="n">seat_button</span><span class="o">.</span><span class="n">setIconSize</span><span class="p">(</span><span class="n">pixmap</span><span class="o">.</span><span class="n">size</span><span class="p">())</span>
+            <span class="k">else</span><span class="p">:</span>
+                <span class="n">pixmap</span> <span class="o">=</span> <span class="n">QPixmap</span><span class="p">(</span><span class="s1">&#39;SalleConcert/images/ziak.jpg&#39;</span><span class="p">)</span>
+                <span class="n">pixmap</span> <span class="o">=</span> <span class="n">pixmap</span><span class="o">.</span><span class="n">scaledToWidth</span><span class="p">(</span><span class="mi">300</span><span class="p">)</span>
+                <span class="n">icon</span> <span class="o">=</span> <span class="n">QIcon</span><span class="p">(</span><span class="n">pixmap</span><span class="p">)</span>
+                <span class="n">seat_button</span><span class="o">.</span><span class="n">setIcon</span><span class="p">(</span><span class="n">icon</span><span class="p">)</span>
+                <span class="n">seat_button</span><span class="o">.</span><span class="n">setIconSize</span><span class="p">(</span><span class="n">pixmap</span><span class="o">.</span><span class="n">size</span><span class="p">())</span>
 
         <span class="n">connection</span><span class="o">.</span><span class="n">close</span><span class="p">()</span>
 
         <span class="bp">self</span><span class="o">.</span><span class="n">setLayout</span><span class="p">(</span><span class="n">layout</span><span class="p">)</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">show</span><span class="p">()</span></div>
+
 
 <div class="viewcode-block" id="ReservationApp.show_login_dialog"><a class="viewcode-back" href="../content/code_application.html#reservation_app.ReservationApp.show_login_dialog">[docs]</a>    <span class="k">def</span> <span class="nf">show_login_dialog</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot; Lance la boîte de dialogue de connexion lorsque le bouton &#39;Se connecter&#39; est cliqué,</span>
@@ -216,12 +240,13 @@
 
             <span class="k">if</span> <span class="n">login_dialog</span><span class="o">.</span><span class="n">exec_</span><span class="p">()</span> <span class="o">==</span> <span class="n">QDialog</span><span class="o">.</span><span class="n">Accepted</span><span class="p">:</span>
                 <span class="n">email</span> <span class="o">=</span> <span class="n">login_dialog</span><span class="o">.</span><span class="n">get_email</span><span class="p">()</span>
-                <span class="bp">self</span><span class="o">.</span><span class="n">current_user</span> <span class="o">=</span> <span class="n">email</span>  <span class="c1"># Stocke le nom de l&#39;utilisateur connecté pour après</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">current_user</span> <span class="o">=</span> <span class="n">email</span>
                 <span class="k">if</span> <span class="n">email</span> <span class="o">==</span> <span class="s1">&#39;admin@salle_concert.fr&#39;</span><span class="p">:</span>
                     <span class="bp">self</span><span class="o">.</span><span class="n">show_admin_controls</span><span class="p">()</span>
                 <span class="k">else</span><span class="p">:</span>
                     <span class="bp">self</span><span class="o">.</span><span class="n">username_label</span><span class="o">.</span><span class="n">setText</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Connecté en tant que </span><span class="si">{</span><span class="n">email</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
                     <span class="bp">self</span><span class="o">.</span><span class="n">login_button</span><span class="o">.</span><span class="n">setText</span><span class="p">(</span><span class="s1">&#39;Déconnexion&#39;</span><span class="p">)</span>
+                    <span class="bp">self</span><span class="o">.</span><span class="n">login_button</span><span class="o">.</span><span class="n">setStyleSheet</span><span class="p">(</span><span class="s1">&#39;background-color: red;&#39;</span><span class="p">)</span>
                     <span class="bp">self</span><span class="o">.</span><span class="n">create_account_button</span><span class="o">.</span><span class="n">setVisible</span><span class="p">(</span><span class="kc">False</span><span class="p">)</span>
         <span class="k">else</span><span class="p">:</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">logout</span><span class="p">()</span></div>
@@ -241,6 +266,7 @@
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">username_label</span><span class="o">.</span><span class="n">setText</span><span class="p">(</span><span class="s2">&quot;Connecté en tant qu&#39;Admin&quot;</span><span class="p">)</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">login_button</span><span class="o">.</span><span class="n">setText</span><span class="p">(</span><span class="s1">&#39;Déconnexion&#39;</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">login_button</span><span class="o">.</span><span class="n">setStyleSheet</span><span class="p">(</span><span class="s1">&#39;background-color: red;&#39;</span><span class="p">)</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">create_account_button</span><span class="o">.</span><span class="n">setVisible</span><span class="p">(</span><span class="kc">False</span><span class="p">)</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">manage_database_button</span><span class="o">.</span><span class="n">setVisible</span><span class="p">(</span><span class="kc">True</span><span class="p">)</span></div>
 
@@ -257,7 +283,7 @@
 
 <span class="sd">            instance.manage_database()</span>
 <span class="sd">        &quot;&quot;&quot;</span>
-        <span class="n">subprocess</span><span class="o">.</span><span class="n">run</span><span class="p">([</span><span class="s1">&#39;python3&#39;</span><span class="p">,</span> <span class="s1">&#39;/home/etudiant/SAE_Prog/SalleConcert/SalleConcert/gestion_graphique/main.py&#39;</span><span class="p">])</span></div>
+        <span class="n">subprocess</span><span class="o">.</span><span class="n">run</span><span class="p">([</span><span class="s1">&#39;python3&#39;</span><span class="p">,</span> <span class="s1">&#39;/home/etudiant/21_12/SAE_Prog/SalleConcert/SalleConcert/gestion_graphique/main.py&#39;</span><span class="p">])</span></div>
 
 <div class="viewcode-block" id="ReservationApp.launch_create_account_script"><a class="viewcode-back" href="../content/code_application.html#reservation_app.ReservationApp.launch_create_account_script">[docs]</a>    <span class="k">def</span> <span class="nf">launch_create_account_script</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;Lance l&#39;interface de création de compte dans la base de données.</span>
@@ -272,7 +298,7 @@
 
 <span class="sd">            instance.manage_database()</span>
 <span class="sd">        &quot;&quot;&quot;</span>
-        <span class="n">subprocess</span><span class="o">.</span><span class="n">run</span><span class="p">([</span><span class="s1">&#39;python3&#39;</span><span class="p">,</span> <span class="s1">&#39;/home/etudiant/SAE_Prog/SalleConcert/SalleConcert/application/creation_compte.py&#39;</span><span class="p">])</span></div>
+        <span class="n">subprocess</span><span class="o">.</span><span class="n">run</span><span class="p">([</span><span class="s1">&#39;python3&#39;</span><span class="p">,</span> <span class="s1">&#39;/home/etudiant/21_12/SAE_Prog/SalleConcert/SalleConcert/application/creation_compte.py&#39;</span><span class="p">])</span></div>
 
 <div class="viewcode-block" id="ReservationApp.logout"><a class="viewcode-back" href="../content/code_application.html#reservation_app.ReservationApp.logout">[docs]</a>    <span class="k">def</span> <span class="nf">logout</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;Permet la déconnexion d&#39;un utilisateur lorsqu&#39;il est connecté.</span>
@@ -289,28 +315,26 @@
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">username_label</span><span class="o">.</span><span class="n">clear</span><span class="p">()</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">login_button</span><span class="o">.</span><span class="n">setText</span><span class="p">(</span><span class="s1">&#39;Se connecter&#39;</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">login_button</span><span class="o">.</span><span class="n">setStyleSheet</span><span class="p">(</span><span class="s1">&#39;background-color: #009919;&#39;</span><span class="p">)</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">create_account_button</span><span class="o">.</span><span class="n">setVisible</span><span class="p">(</span><span class="kc">True</span><span class="p">)</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">manage_database_button</span><span class="o">.</span><span class="n">setVisible</span><span class="p">(</span><span class="kc">False</span><span class="p">)</span></div>
 
-<div class="viewcode-block" id="ReservationApp.handle_concert_click"><a class="viewcode-back" href="../content/code_application.html#reservation_app.ReservationApp.handle_concert_click">[docs]</a>    <span class="k">def</span> <span class="nf">handle_concert_click</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">concert_name</span><span class="p">):</span>
+<div class="viewcode-block" id="ReservationApp.concert_clique"><a class="viewcode-back" href="../content/code_application.html#reservation_app.ReservationApp.concert_clique">[docs]</a>    <span class="k">def</span> <span class="nf">concert_clique</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">concert_name</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;Fonction appelée lorsqu&#39;un bouton de concert est cliqué.</span>
 
-<span class="sd">        :param concert_name: Le nom du concert cliqué.</span>
-<span class="sd">        :type concert_name: str</span>
-<span class="sd">        :return: Aucun</span>
-<span class="sd">        :rtype: None</span>
-<span class="sd">        :raises: Aucune</span>
+<span class="sd">    :param concert_name: Le nom du concert cliqué.</span>
+<span class="sd">    :type concert_name: str</span>
+<span class="sd">    :return: Aucun</span>
+<span class="sd">    :rtype: None</span>
+<span class="sd">    :raises: Aucune</span>
 
-<span class="sd">        :example:</span>
+<span class="sd">    :example:</span>
 
-<span class="sd">        .. code-block:: python</span>
+<span class="sd">    .. code-block:: python</span>
 
-<span class="sd">            instance.handle_concert_click(&quot;Nom du concert&quot;)</span>
-<span class="sd">        &quot;&quot;&quot;</span>
-        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">login_button</span><span class="o">.</span><span class="n">text</span><span class="p">()</span> <span class="o">==</span> <span class="s1">&#39;Déconnexion&#39;</span><span class="p">:</span>
-            <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Concert </span><span class="si">{</span><span class="n">concert_name</span><span class="si">}</span><span class="s2"> is clicked by </span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">current_user</span><span class="si">}</span><span class="s2">.&quot;</span><span class="p">)</span>
-        <span class="k">else</span><span class="p">:</span>
-            <span class="n">QMessageBox</span><span class="o">.</span><span class="n">warning</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="s1">&#39;Erreur&#39;</span><span class="p">,</span> <span class="s1">&#39;Vous devez être connecté !&#39;</span><span class="p">)</span></div></div>
+<span class="sd">        instance.concert_clique(&quot;Nom du concert&quot;)</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+        <span class="n">subprocess</span><span class="o">.</span><span class="n">run</span><span class="p">([</span><span class="s1">&#39;python3&#39;</span><span class="p">,</span> <span class="s1">&#39;/home/etudiant/21_12/SAE_Prog/SalleConcert/SalleConcert/application/script_siege.py&#39;</span><span class="p">],</span> <span class="n">check</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span></div></div>
 </pre></div>
 
            </div>

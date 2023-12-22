@@ -3,7 +3,8 @@
    :platform: Unix, Windows
    :synopsis: Lancement de la fenêtre de création de compte
 
-.. moduleauthor:: Chapus Anthony <anthony.chapus1002@etu.univ-poitiers.fr>
+.. moduleauthor:: Chapus Anthony <anthony.chapus@etu.univ-poitiers.fr>
+                  LE PABIC Gurvan <gurvan.le.pabic@etu.univ-poitiers.fr>
 
 """
 import sys

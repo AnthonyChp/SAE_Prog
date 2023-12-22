@@ -1,16 +1,15 @@
 import sys
-from PyQt5.QtWidgets import QApplication, QWidget, QGridLayout, QPushButton, QVBoxLayout, QLabel, QLineEdit, QMessageBox
+from PyQt5.QtWidgets import QApplication, QWidget, QGridLayout, QPushButton, QMessageBox
 from PyQt5.QtGui import QPixmap, QIcon
 from PyQt5.QtCore import Qt
-from login_dialog import LoginDialog
 import mysql.connector
 import os
+from login_dialog import LoginDialog
 
 class SeatWindow(QWidget):
     def __init__(self):
         super().__init__()
 
-        
         self.login_dialog = LoginDialog(self)
         self.current_user = None 
 
@@ -26,9 +25,8 @@ class SeatWindow(QWidget):
         self.selected_seats = []
         self.setGeometry(100, 100, 400, 400)
 
-        # Use absolute path to load the image
         current_directory = os.path.dirname(os.path.realpath(__file__))
-        image_path = os.path.join(current_directory, 'images', 'siege.png')
+        image_path = os.path.join(current_directory, '..' ,'..','images', 'siege.png')
 
         grid_layout = QGridLayout()
         self.setLayout(grid_layout)
@@ -37,8 +35,8 @@ class SeatWindow(QWidget):
             for j in range(5):
                 seat_btn = QPushButton(f"{chr(65 + i)}-{j + 1}")
 
-                # Set the icon using absolute path
                 pixmap = QPixmap(image_path)
+                pixmap = pixmap.scaledToWidth(50)
                 seat_btn.setIcon(QIcon(pixmap))
                 seat_btn.setIconSize(pixmap.size())
 
@@ -50,46 +48,34 @@ class SeatWindow(QWidget):
         validate_btn.clicked.connect(self.save_selected_seats)  
         grid_layout.addWidget(validate_btn, 6, 0, 1, 5)  
 
-        # Add QLineEdit widgets for name and email
-        self.name_edit = QLineEdit()
-        self.email_edit = QLineEdit()
-
-        grid_layout.addWidget(QLabel("Nom:"), 7, 0)
-        grid_layout.addWidget(self.name_edit, 7, 1, 1, 4)
-        grid_layout.addWidget(QLabel("Email:"), 8, 0)
-        grid_layout.addWidget(self.email_edit, 8, 1, 1, 4)
-
         self.show()
 
     def set_current_user(self, current_user):
         self.current_user = current_user
 
     def on_seat_selected(self):
-        seat_btn = self.sender()  # Récupérer le bouton qui a déclenché le signal
+        seat_btn = self.sender()
 
-        if seat_btn.isChecked():  # Vérifier si le bouton est coché (sélectionné)
-            seat_btn.setStyleSheet("border: 2px solid green;")  # Changer le style du bouton
+        if seat_btn.isChecked():
+            seat_btn.setStyleSheet("border: 2px solid green;")
             seat_name = seat_btn.text()
             if seat_name not in self.selected_seats:
-                self.selected_seats.append(seat_name)  # Ajouter le siège à la liste des sièges sélectionnés
+                self.selected_seats.append(seat_name)
         else:
-            seat_btn.setStyleSheet("")  # Réinitialiser le style du bouton
+            seat_btn.setStyleSheet("")
             seat_name = seat_btn.text()
             if seat_name in self.selected_seats:
-                self.selected_seats.remove(seat_name)  # Enlever le siège de la liste des sièges sélectionnés
+                self.selected_seats.remove(seat_name)
 
-        print("Sièges sélectionnés :", self.selected_seats)  # Afficher les sièges sélectionnés dans la console
+        print("Sièges sélectionnés :", self.selected_seats)
 
     def save_selected_seats(self):
         if not self.selected_seats:
             QMessageBox.warning(self, "Avertissement", "Aucun siège sélectionné!")
             return
 
-        name = self.name_edit.text()
-        email = self.email_edit.text()
-
-        if not name or not email:
-            QMessageBox.warning(self, "Avertissement", "Veuillez remplir tous les champs!")
+        if not self.current_user:
+            QMessageBox.warning(self, "Avertissement", "Utilisateur non identifié!")
             return
 
         connection = mysql.connector.connect(
@@ -101,16 +87,25 @@ class SeatWindow(QWidget):
 
         cursor = connection.cursor()
 
-        for seat in self.selected_seats:
-            sql = "INSERT INTO spectateurs (nom, email, emplacement) VALUES (%s, %s, %s)"
-            values = (name, email, seat)
+        try:
+            selected_seat = self.selected_seats[0]
+
+            print(self.current_user)
+
+            sql = 'INSERT INTO spectateurs (emplacement) VALUES (%s)'
+            values = (selected_seat,)
             cursor.execute(sql, values)
 
-        connection.commit()
-        print(cursor.rowcount, "lignes insérées.")
-        connection.close()
+            connection.commit()
+            print(cursor.rowcount, "lignes insérées.")
+            QMessageBox.information(self, "Information", "Siège enregistré avec succès!")
 
-        QMessageBox.information(self, "Information", "Sièges enregistrés avec succès!")
+        except mysql.connector.Error as err:
+            print("Error:", err)
+            QMessageBox.critical(self, "Erreur", f"Erreur lors de l'enregistrement du siège:\n{err}")
+
+        finally:
+            connection.close()
 
 def main():
     app = QApplication(sys.argv)

@@ -54,6 +54,7 @@ class ReservationApp(QWidget):
         self.setWindowTitle('Réservation de Concert')
 
         self.login_button = QPushButton('Se connecter')
+        self.login_button.setStyleSheet('background-color: #009919;')
         self.login_button.clicked.connect(self.show_login_dialog)
 
         self.create_account_button = QPushButton('Créer un compte')
@@ -86,20 +87,18 @@ class ReservationApp(QWidget):
         )
         cursor = connection.cursor()
 
-        cursor.execute("SELECT id, titre, tarif FROM concerts")
+        cursor.execute("SELECT id, artiste, tarif, date FROM concerts")
         concerts = cursor.fetchall()
 
         layout.setRowStretch(0, 1)
         layout.setRowStretch(row_count, 1)
 
-                # Inside the for loop where you create concert buttons
         for i, concert in enumerate(concerts):
             row = i // 3 + 1
             col = i % 3 + 1 + (3 - (len(concerts) % 3 + 1) // 2)
-
-            concert_info = f"{concert[1]}\nTarif: {concert[2]}"
+            concert_info = f"{concert[1]}\n{concert[2]}€\n{concert[3]}"
             seat_button = QPushButton(concert_info)
-            layout.addWidget(seat_button, row + 2, col)
+            layout.addWidget(seat_button, row , col)
 
             seat_button.setFixedSize(300, 300)
             seat_button.setStyleSheet(
@@ -137,6 +136,7 @@ class ReservationApp(QWidget):
                 seat_button.setIconSize(pixmap.size())
 
         connection.close()
+
         self.setLayout(layout)
         self.show()
 
@@ -168,6 +168,7 @@ class ReservationApp(QWidget):
                 else:
                     self.username_label.setText(f"Connecté en tant que {email}")
                     self.login_button.setText('Déconnexion')
+                    self.login_button.setStyleSheet('background-color: red;')
                     self.create_account_button.setVisible(False)
         else:
             self.logout()
@@ -187,6 +188,7 @@ class ReservationApp(QWidget):
         """
         self.username_label.setText("Connecté en tant qu'Admin")
         self.login_button.setText('Déconnexion')
+        self.login_button.setStyleSheet('background-color: red;')
         self.create_account_button.setVisible(False)
         self.manage_database_button.setVisible(True)
 
@@ -203,7 +205,7 @@ class ReservationApp(QWidget):
 
             instance.manage_database()
         """
-        subprocess.run(['python3', '/home/etudiant/Documents/SAE_Prog/SalleConcert/SalleConcert/gestion_graphique/main.py'])
+        subprocess.run(['python3', '/home/etudiant/21_12/SAE_Prog/SalleConcert/SalleConcert/gestion_graphique/main.py'])
 
     def launch_create_account_script(self):
         """Lance l'interface de création de compte dans la base de données.
@@ -218,7 +220,7 @@ class ReservationApp(QWidget):
 
             instance.manage_database()
         """
-        subprocess.run(['python3', '/home/etudiant/Documents/SAE_Prog/SalleConcert/SalleConcert/application/creation_compte.py'])
+        subprocess.run(['python3', '/home/etudiant/21_12/SAE_Prog/SalleConcert/SalleConcert/application/creation_compte.py'])
 
     def logout(self):
         """Permet la déconnexion d'un utilisateur lorsqu'il est connecté.
@@ -235,6 +237,7 @@ class ReservationApp(QWidget):
         """
         self.username_label.clear()
         self.login_button.setText('Se connecter')
+        self.login_button.setStyleSheet('background-color: #009919;')
         self.create_account_button.setVisible(True)
         self.manage_database_button.setVisible(False)
 

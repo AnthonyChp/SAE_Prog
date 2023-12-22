@@ -1,34 +1,60 @@
-import smtplib
-from email.message import EmailMessage
+"""
+.. module:: email_simulation
+   :platform: Unix, Windows
+   :synopsis: Script de simulation d'envoi d'e-mail pour la confirmation de réservation.
 
-def send_email(subject, body):
-    gmail_user = 'votre_email@gmail.com'
-    gmail_password = 'votre_mot_de_passe'
+.. moduleauthor:: Gurvan LE PABIC <gurvan.le.pabic@etu.univ-poitiers.fr>
 
-    msg = EmailMessage()
-    msg['From'] = gmail_user
-    msg['To'] = 'destination@example.com'
-    msg['Subject'] = subject
-    msg.set_content(body)
+"""
 
-    try:
-        server = smtplib.SMTP('smtp.gmail.com', 587)
-        server.ehlo()
-        server.starttls()
-        server.login(gmail_user, gmail_password)
+import mysql.connector
+from login_dialog import LoginDialog
 
-        server.send_message(msg)
-        print("E-mail envoyé avec succès!")
 
-    except Exception as e:
-        print("Erreur lors de l'envoi de l'e-mail:", e)
+def simulate_email_sending(email, emplacement, tarif):
+    """
+    Simule l'envoi d'un e-mail de confirmation de réservation.
 
-    finally:
-        server.quit()
+    :param email: L'adresse e-mail du spectateur.
+    :type email: str
+    :param emplacement: L'emplacement réservé par le spectateur.
+    :type emplacement: str
+    :param tarif: Le tarif de la réservation.
+    :type tarif: str
+    :return: Aucun
+    :rtype: None
+    """
+    expediteur = "envoiemail.salle_concert.fr"
+    sujet = "Confirmation de réservation"
+    message = f"Merci d'avoir réservé vos places pour le concert.\n"\
+              f"Vous avez réservé la place {emplacement} au tarif de {tarif}.\n"\
+              "Nous attendons avec impatience de vous voir au concert!\n"\
+              "Cordialement,\nSalle Concert"
 
-# Exemple d'utilisation pour envoyer un e-mail après une réservation
-subject = 'Récapitulatif de votre réservation'
-body = 'Bonjour,\n\nMerci d\'avoir réservé pour le concert. Voici le récapitulatif de votre commande.'
+    print("Simulation d'envoi de mail :")
+    print(f"De : {expediteur}")
+    print(f"À : {email}")
+    print(f"Sujet : {sujet}")
+    print("Message :")
+    print(message)
 
-# Appel de la fonction send_email avec le sujet et le corps du message
-send_email(subject, body)
+# Connexion à la base de données
+connection = mysql.connector.connect(
+    host='localhost',
+    user='admin',
+    password='admin',
+    database='salle_concert'
+)
+
+cursor = connection.cursor()
+
+# Récupération des informations depuis la table spectateurs
+cursor.execute("SELECT email, emplacement, tarif FROM spectateurs")
+result = cursor.fetchall()
+
+# Fermeture de la connexion à la base de données
+connection.close()
+
+# Exemple d'utilisation avec les données récupérées
+for row in result:
+    simulate_email_sending(row[0], row[1], row[2])

@@ -19,7 +19,7 @@
     <link rel="index" title="Index" href="../genindex.html" />
     <link rel="search" title="Recherche" href="../search.html" />
     <link rel="next" title="Documentation du code de l’application de gestion graphique" href="code_gestion_graphique.html" />
-    <link rel="prev" title="Documentation du code" href="code.html" /> 
+    <link rel="prev" title="Présentation" href="code.html" /> 
 </head>
 
 <body class="wy-body-for-nav"> 
@@ -43,7 +43,7 @@
         </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
               <p class="caption" role="heading"><span class="caption-text">Contenu:</span></p>
 <ul>
-<li class="toctree-l1"><a class="reference internal" href="code.html">Documentation du code</a></li>
+<li class="toctree-l1"><a class="reference internal" href="code.html">Présentation</a></li>
 </ul>
 <p class="caption" role="heading"><span class="caption-text">Application principale</span></p>
 <ul class="current">
@@ -100,7 +100,7 @@ l’affichage des informations de l’utilisateur, et l’interaction avec la ba
 </div>
 <dl class="py method">
 <dt class="sig sig-object py">
-<span class="sig-name descname"><span class="pre">handle_concert_click</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">concert_name</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/reservation_app.html#ReservationApp.handle_concert_click"><span class="viewcode-link"><span class="pre">[source]</span></span></a></dt>
+<span class="sig-name descname"><span class="pre">concert_clique</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">concert_name</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/reservation_app.html#ReservationApp.concert_clique"><span class="viewcode-link"><span class="pre">[source]</span></span></a></dt>
 <dd><p>Fonction appelée lorsqu’un bouton de concert est cliqué.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Paramètres<span class="colon">:</span></dt>
@@ -118,7 +118,7 @@ l’affichage des informations de l’utilisateur, et l’interaction avec la ba
 <dt class="field-odd">Example<span class="colon">:</span></dt>
 <dd class="field-odd"><p></p></dd>
 </dl>
-<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">instance</span><span class="o">.</span><span class="n">handle_concert_click</span><span class="p">(</span><span class="s2">&quot;Nom du concert&quot;</span><span class="p">)</span>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">instance</span><span class="o">.</span><span class="n">concert_clique</span><span class="p">(</span><span class="s2">&quot;Nom du concert&quot;</span><span class="p">)</span>
 </pre></div>
 </div>
 </dd></dl>
@@ -363,6 +363,27 @@ puis d’envoyer ces informations à une base de données après un processus de
 </div>
 </dd></dl>
 
+<span class="target" id="module-email_simulation"></span><dl class="py function">
+<dt class="sig sig-object py">
+<span class="sig-prename descclassname"><span class="pre">envoie_mail.</span></span><span class="sig-name descname"><span class="pre">simulate_email_sending</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">email</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">emplacement</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">tarif</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/envoie_mail.html#simulate_email_sending"><span class="viewcode-link"><span class="pre">[source]</span></span></a></dt>
+<dd><p>Simule l’envoi d’un e-mail de confirmation de réservation.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Paramètres<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>email</strong> (<em>str</em>) – L’adresse e-mail du spectateur.</p></li>
+<li><p><strong>emplacement</strong> (<em>str</em>) – L’emplacement réservé par le spectateur.</p></li>
+<li><p><strong>tarif</strong> (<em>str</em>) – Le tarif de la réservation.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Renvoie<span class="colon">:</span></dt>
+<dd class="field-even"><p>Aucun</p>
+</dd>
+<dt class="field-odd">Type renvoyé<span class="colon">:</span></dt>
+<dd class="field-odd"><p>None</p>
+</dd>
+</dl>
+</dd></dl>
+
 <dl class="py class">
 <dt class="sig sig-object py">
 <em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">seat_button.</span></span><span class="sig-name descname"><span class="pre">SeatButton</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">row</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">col</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">concert_name</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/seat_button.html#SeatButton"><span class="viewcode-link"><span class="pre">[source]</span></span></a></dt>
@@ -375,7 +396,7 @@ puis d’envoyer ces informations à une base de données après un processus de
            </div>
           </div>
           <footer><div class="rst-footer-buttons" role="navigation" aria-label="Pied de page">
-        <a href="code.html" class="btn btn-neutral float-left" title="Documentation du code" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Précédent</a>
+        <a href="code.html" class="btn btn-neutral float-left" title="Présentation" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Précédent</a>
         <a href="code_gestion_graphique.html" class="btn btn-neutral float-right" title="Documentation du code de l’application de gestion graphique" accesskey="n" rel="next">Suivant <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
     </div>
 
