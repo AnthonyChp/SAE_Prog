@@ -15,6 +15,7 @@ from PyQt5.QtCore import Qt
 from PyQt5.QtGui import QPixmap, QIcon
 from functools import partial
 import sys
+from script_siege import SeatWindow
 
 class ReservationApp(QWidget):
     """
@@ -76,7 +77,6 @@ class ReservationApp(QWidget):
         layout.addWidget(self.manage_database_button, 0, 6, 1, 5, alignment=Qt.AlignTop | Qt.AlignRight)
         layout.addWidget(self.username_label, 2, 1, 1, 10)
 
-        self.seat_buttons = []
 
         connection = mysql.connector.connect(
             host='localhost',
@@ -92,8 +92,8 @@ class ReservationApp(QWidget):
         layout.setRowStretch(0, 1)
         layout.setRowStretch(row_count, 1)
 
+                # Inside the for loop where you create concert buttons
         for i, concert in enumerate(concerts):
-            rows_needed = (len(concerts) - 1) // 3 + 1
             row = i // 3 + 1
             col = i % 3 + 1 + (3 - (len(concerts) % 3 + 1) // 2)
 
@@ -113,6 +113,10 @@ class ReservationApp(QWidget):
                 }
                 '''
             )
+
+            # Ajout a chaque bouton sa propre fonction
+            seat_button.clicked.connect(partial(self.concert_clique, concert_info))
+
             if concert[0] == 1:
                 pixmap = QPixmap('SalleConcert/images/josman.jpg')
                 pixmap = pixmap.scaledToWidth(300)
@@ -131,10 +135,11 @@ class ReservationApp(QWidget):
                 icon = QIcon(pixmap)
                 seat_button.setIcon(icon)
                 seat_button.setIconSize(pixmap.size())
-        connection.close()
 
+        connection.close()
         self.setLayout(layout)
         self.show()
+
 
     def show_login_dialog(self):
         """ Lance la boîte de dialogue de connexion lorsque le bouton 'Se connecter' est cliqué,
@@ -233,22 +238,19 @@ class ReservationApp(QWidget):
         self.create_account_button.setVisible(True)
         self.manage_database_button.setVisible(False)
 
-    def handle_concert_click(self, concert_name):
+    def concert_clique(self, concert_name):
         """Fonction appelée lorsqu'un bouton de concert est cliqué.
 
-        :param concert_name: Le nom du concert cliqué.
-        :type concert_name: str
-        :return: Aucun
-        :rtype: None
-        :raises: Aucune
+    :param concert_name: Le nom du concert cliqué.
+    :type concert_name: str
+    :return: Aucun
+    :rtype: None
+    :raises: Aucune
 
-        :example:
+    :example:
 
-        .. code-block:: python
+    .. code-block:: python
 
-            instance.handle_concert_click("Nom du concert")
-        """
-        if self.login_button.text() == 'Déconnexion':
-            print(f"Concert {concert_name} is clicked by {self.current_user}.")
-        else:
-            QMessageBox.warning(self, 'Erreur', 'Vous devez être connecté !')
+        instance.concert_clique("Nom du concert")
+    """
+        subprocess.run(['python3', '/home/etudiant/21_12/SAE_Prog/SalleConcert/SalleConcert/application/script_siege.py'], check=True)

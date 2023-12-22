@@ -1,21 +1,34 @@
 import sys
-from PyQt5.QtWidgets import QApplication, QWidget, QGridLayout, QPushButton, QVBoxLayout, QLabel, QMessageBox
+from PyQt5.QtWidgets import QApplication, QWidget, QGridLayout, QPushButton, QVBoxLayout, QLabel, QLineEdit, QMessageBox
 from PyQt5.QtGui import QPixmap, QIcon
 from PyQt5.QtCore import Qt
-import os 
+from login_dialog import LoginDialog
 import mysql.connector
-
+import os
 
 class SeatWindow(QWidget):
     def __init__(self):
         super().__init__()
-        self.initUI()
+
         
+        self.login_dialog = LoginDialog(self)
+        self.current_user = None 
+
+        if self.login_dialog.exec_() == LoginDialog.Accepted:
+            self.current_user = self.login_dialog.get_email()
+            print(self.current_user)
+            self.initUI()
+        else:
+            self.logout()
 
     def initUI(self):
         self.setWindowTitle('Salle de concert')
         self.selected_seats = []
         self.setGeometry(100, 100, 400, 400)
+
+        # Use absolute path to load the image
+        current_directory = os.path.dirname(os.path.realpath(__file__))
+        image_path = os.path.join(current_directory, 'images', 'siege.png')
 
         grid_layout = QGridLayout()
         self.setLayout(grid_layout)
@@ -23,19 +36,33 @@ class SeatWindow(QWidget):
         for i in range(5):
             for j in range(5):
                 seat_btn = QPushButton(f"{chr(65 + i)}-{j + 1}")
-                pixmap = QPixmap('../images/siege.png')
-                pixmap = pixmap.scaledToWidth(50)
-                icon = QIcon(pixmap)
-                seat_btn.setIcon(icon)
+
+                # Set the icon using absolute path
+                pixmap = QPixmap(image_path)
+                seat_btn.setIcon(QIcon(pixmap))
                 seat_btn.setIconSize(pixmap.size())
+
                 seat_btn.setCheckable(True)  
                 seat_btn.clicked.connect(self.on_seat_selected) 
                 grid_layout.addWidget(seat_btn, i, j)
 
         validate_btn = QPushButton("Valider")
-        validate_btn.clicked.connect(self.save_selected_seats)  # Connecter le bouton Valider à la méthode pour enregistrer les sièges
-        grid_layout.addWidget(validate_btn, 6, 0, 1, 5)  # Ajouter le bouton Valider en bas
+        validate_btn.clicked.connect(self.save_selected_seats)  
+        grid_layout.addWidget(validate_btn, 6, 0, 1, 5)  
+
+        # Add QLineEdit widgets for name and email
+        self.name_edit = QLineEdit()
+        self.email_edit = QLineEdit()
+
+        grid_layout.addWidget(QLabel("Nom:"), 7, 0)
+        grid_layout.addWidget(self.name_edit, 7, 1, 1, 4)
+        grid_layout.addWidget(QLabel("Email:"), 8, 0)
+        grid_layout.addWidget(self.email_edit, 8, 1, 1, 4)
+
         self.show()
+
+    def set_current_user(self, current_user):
+        self.current_user = current_user
 
     def on_seat_selected(self):
         seat_btn = self.sender()  # Récupérer le bouton qui a déclenché le signal
@@ -87,11 +114,8 @@ class SeatWindow(QWidget):
 
 def main():
     app = QApplication(sys.argv)
-    current_directory = os.path.dirname(os.path.realpath(__file__))
-    os.chdir(os.path.join(current_directory, "..", "images"))
     seat_window = SeatWindow()
     sys.exit(app.exec_())
-
 
 if __name__ == '__main__':
     main()
